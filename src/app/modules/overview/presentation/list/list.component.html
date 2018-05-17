@@ -1,0 +1,4 @@
+<ul>
+	<li *ngFor="let hero of heroes" (click)="selectPlayer('hero', hero._id)">{{hero.name}}</li>
+	<li *ngFor="let monster of monsters" (click)="selectPlayer('monster', monster._id)">{{monster.name}}</li>
+</ul>

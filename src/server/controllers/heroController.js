@@ -4,9 +4,9 @@ var Hero = require('../models/heroes');
 exports.heroes_list = function (req, res) {
 	Hero.find(function (err, heroes) {
 		if (err) {
-			res.send(err);
+			res.status(400).send(err);
 		} else {
-			res.json(heroes);
+			res.status(200).json(heroes);
 		}
 	});
 }

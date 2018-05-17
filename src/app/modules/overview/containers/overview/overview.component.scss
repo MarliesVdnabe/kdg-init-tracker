@@ -1,0 +1,10 @@
+.container {
+	display: flex;
+	height: 90vh;
+	#players, #specs {
+		flex-grow: 1;
+	}
+	#encounter {
+		flex-grow: 2
+	}
+}

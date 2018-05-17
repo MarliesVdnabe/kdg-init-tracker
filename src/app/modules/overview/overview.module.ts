@@ -1,10 +1,33 @@
 import { NgModule } from '@angular/core';
-import { OverviewComponent } from './component/overview.component';
+import { CommonModule } from '@angular/common';
+
+/* Components */
+import { OverviewComponent } from './containers/overview/overview.component';
+import { ListComponent } from './presentation/list/list.component';
+import { RouterModule } from '@angular/router';
+
+/* Services */
+import { OverviewService } from './services/overview.service';
+
+export const myOverviewRoutes = [
+	{ path: '', component: OverviewComponent }
+];
 
 @NgModule({
-	imports: [],
-	exports: [],
-	declarations: [OverviewComponent],
-	providers: [],
+	declarations: [
+		OverviewComponent,
+		ListComponent
+	],
+	imports: [
+		CommonModule,
+		RouterModule.forChild(myOverviewRoutes)
+	],
+	exports: [
+		OverviewComponent,
+		ListComponent
+	],
+	providers: [
+		OverviewService
+	],
 })
 export class OverviewModule { }

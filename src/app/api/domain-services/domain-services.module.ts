@@ -1,0 +1,19 @@
+import { NgModule, ModuleWithProviders } from '@angular/core';
+import { ApiServicesModule } from '../api-services/api-services.module';
+import { HeroDomainService } from './hero.domain.service';
+import { MonsterDomainService } from './monster.domain.service';
+
+@NgModule({
+	imports: [ApiServicesModule.forRoot()]
+})
+export class DomainServicesModule {
+	static forRoot(): ModuleWithProviders {
+		return {
+			ngModule: DomainServicesModule,
+			providers: [
+				HeroDomainService,
+				MonsterDomainService
+			]
+		};
+	}
+}

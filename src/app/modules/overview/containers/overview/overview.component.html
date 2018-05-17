@@ -1,0 +1,14 @@
+<div class="container">
+	<div id="players">
+		<div>
+			<button class="button" (click)="showMonsterList()">Monsters</button>
+			<button class="button" (click)="showHeroesList()">Heroes</button>
+			<button class="button" (click)="showEncountersList()">Encounters</button>
+		</div>
+		<div>
+			<app-list *ngIf="loaded" [heroes]="heroes" [monsters]="monsters" (onItemClicked)="selectedItem($event)"></app-list>
+		</div>
+	</div>
+	<div id="encounter">Encounter</div>
+	<div id="specs">Specs</div>
+</div>
