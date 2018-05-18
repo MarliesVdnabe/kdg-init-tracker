@@ -9,7 +9,16 @@ export class MonsterDomainService {
 		private _monsterApiService: MonsterApiService
 	) { }
 
+
+	// editMonster(id: string): Observable<any | RequestError> {
+	// 	return this._monsterApiService.editMonster(id);
+	// }
+
 	getAllMonsters(): Observable<any | RequestError> {
 		return this._monsterApiService.getAllMonsters();
+	}
+
+	getMonster(id: string): Observable<any | RequestError> {
+		return this._monsterApiService.getMonster(id);
 	}
 }

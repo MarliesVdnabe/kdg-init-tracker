@@ -14,8 +14,13 @@ import { Hero } from '../../../../api/models/hero';
 export class OverviewComponent implements OnInit {
 	heroes: Hero[];
 	monsters: Hero[];
-	loaded: Boolean = false;
+	combatant: Hero;
+	combatants = [];
 	list: string;
+
+	// STATE
+	loaded: Boolean = false;
+	enableCombatant: Boolean = false;
 
 	constructor(
 		private _overviewService: OverviewService
@@ -23,6 +28,22 @@ export class OverviewComponent implements OnInit {
 
 	ngOnInit() {
 		this.showMonsterList();
+	}
+
+	viewCombatant(event) {
+		const combatant = event.item;
+		if (combatant === 'monster') {
+			this._overviewService.getMonster(event.id)
+				.subscribe((monster: RequestResult<any | RequestError>) => {
+					if (monster.requestResultType === RequestResultType.Data) {
+						this.combatant = monster.data as Hero;
+						this.enableCombatant = true;
+
+					}
+				});
+		} else {
+			console.log('HERO');
+		}
 	}
 
 	showMonsterList() {
@@ -48,6 +69,19 @@ export class OverviewComponent implements OnInit {
 	}
 
 	selectedItem(event) {
+		const combatant = event;
+		// SEE IF COMBATANT IS ALREADY IN LIST
+		for (let i = 0; i < this.combatants.length; i++) {
+			if (this.combatants[i].details.name === combatant.details.name && !this.combatants[i].tempId) {
+				combatant.tempId = 2;
+			} else if (this.combatants[i].details.name === combatant.details.name && this.combatants[i].tempId) {
+				combatant.tempId = this.combatants[i].tempId + 1;
+			}
+		}
+		this.combatants.push(combatant);
+	}
+
+	startEncounter(event) {
 		console.log(event);
 	}
 }

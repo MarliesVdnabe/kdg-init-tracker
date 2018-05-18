@@ -1,14 +1,25 @@
 <div class="container">
 	<div id="players">
+		<h2>Library</h2>
 		<div>
 			<button class="button" (click)="showMonsterList()">Monsters</button>
 			<button class="button" (click)="showHeroesList()">Heroes</button>
 			<button class="button" (click)="showEncountersList()">Encounters</button>
 		</div>
 		<div>
-			<app-list *ngIf="loaded" [heroes]="heroes" [monsters]="monsters" (onItemClicked)="selectedItem($event)"></app-list>
+			<app-list *ngIf="loaded" [heroes]="heroes" [monsters]="monsters" (onItemClicked)="selectedItem($event)" (onEditPlayerClicked)="viewCombatant($event)"></app-list>
 		</div>
 	</div>
-	<div id="encounter">Encounter</div>
-	<div id="specs">Specs</div>
+	<div id="encounter">
+		<h2>Initiative order</h2>
+		<div>
+			<app-initiative-table *ngIf="combatants.length" [combatants]="combatants" (onStartEncounter)="startEncounter($event)"></app-initiative-table>
+		</div>
+	</div>
+	<div id="specs">
+		<h2>Edit Combatants</h2>
+		<div>
+			<app-specs *ngIf="enableCombatant" [combatant]="combatant"></app-specs>
+		</div>
+	</div>
 </div>

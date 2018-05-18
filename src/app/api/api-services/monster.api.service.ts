@@ -18,8 +18,23 @@ export class MonsterApiService extends BaseRestApiService {
 		super(http);
 	}
 
+	// editMonster(id: string): Observable<any | RequestError> {
+	// 	return console.log('SET API CALL');
+	// }
+
 	getAllMonsters(): Observable<any | RequestError> {
-		return this.get(`${this.monsterUrl}/monsters`)
+		return this.get(`${this.monsterUrl}/monsters/`)
+			.map((result: RequestResult<any | RequestError>) => {
+				if (result.requestResultType === RequestResultType.Data) {
+					return new RequestResult(result.requestResultType, result.data);
+				} else {
+					return result.data as RequestResult<RequestError>;
+				}
+			});
+	}
+
+	getMonster(id: string): Observable<any | RequestError> {
+		return this.get(`${this.monsterUrl}/monster/${id}`)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
 					return new RequestResult(result.requestResultType, result.data);

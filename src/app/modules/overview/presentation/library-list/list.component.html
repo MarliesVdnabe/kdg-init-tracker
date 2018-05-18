@@ -1,0 +1,14 @@
+<ul>
+	<li class="hero" *ngFor="let hero of heroes">
+		<span (click)="selectPlayer('hero', hero)">{{hero.name}}</span>
+		<span (click)="editPlayer('hero', hero._id)">
+			<img src="../../../../../assets/images/pencil_edit.png" alt="Edit">
+		</span>
+	</li>
+	<li class="monster" *ngFor="let monster of monsters">
+		<span (click)="selectPlayer('monster', monster)">{{monster.name}}</span>
+		<span (click)="editPlayer('monster', monster._id)">
+			<img src="../../../../../assets/images/pencil_edit.png" alt="Edit">
+		</span>
+	</li>
+</ul>

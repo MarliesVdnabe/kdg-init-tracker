@@ -4,8 +4,7 @@ const Schema = mongoose.Schema;
 
 const EncounterSchema = new Schema({
 	name: { type: String },
-	monsters: [{ type: Schema.ObjectId, ref: 'Monster' }],
-	heroes: [{ type: Schema.ObjectId, ref: 'Hero' }]
-}, { versionKey: false });
+	combatants: [{ type: Schema.ObjectId, ref: 'Combatant' }],
+});
 
-module.exports = mongoose.model('Encounter', EncounterSchema);
+module.exports = mongoose.model('Encounter', EncounterSchema, 'encounters');

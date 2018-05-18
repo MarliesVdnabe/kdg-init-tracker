@@ -12,11 +12,23 @@ export class OverviewService {
 		private _monsterService: MonsterDomainService
 	) { }
 
+	// * HEROES * //
+
 	getAllHeroes(): Observable<any | RequestError> {
 		return this._heroService.getAllHeroes();
 	}
 
+	// * Monsters * //
+
+	// edit(id): Observable<any | RequestError> {
+	// 	return this._monsterService.editMonster(id);
+	// }
+
 	getAllMonsters(): Observable<any | RequestError> {
 		return this._monsterService.getAllMonsters();
+	}
+
+	getMonster(id:string): Observable<any | RequestError> {
+		return this._monsterService.getMonster(id);
 	}
 }

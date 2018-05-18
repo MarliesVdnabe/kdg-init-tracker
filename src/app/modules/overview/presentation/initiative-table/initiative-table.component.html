@@ -1,0 +1,32 @@
+<table>
+	<tr>
+		<th>Combatant</th>
+		<th>
+			<img src="../../../../../assets/images/favorite-heart.png" alt="Hitpoints">
+		</th>
+		<th>
+			<img src="../../../../../assets/images/rpg-game.png" alt="Armor Class">
+		</th>
+		<th>Remove combatant</th>
+		<th>Visibility</th>
+	</tr>
+	<tr *ngFor="let combatant of combatants" class="{{combatant.item}}">
+		<td>{{combatant.details.name}} {{combatant.tempId}}</td>
+		<td>{{combatant.details.hitPoints}}/{{combatant.details.hitPoints}}</td>
+		<td>{{combatant.details.armorClass}}</td>
+		<!-- <td (click)="editCombatant(combatant.details._id, combatant.item)">
+			<img class="editImage" src="../../../../../assets/images/pencil_edit.png" alt="edit">
+		</td> -->
+		<td (click)="removeCombatant(combatant.details.name, combatant.tempId)">
+			<img class="editImage" src="../../../../../assets/images/cancel.png" alt="remove">
+		</td>
+		<td>
+			<label class="switch">
+				<input type="checkbox" checked>
+				<span class="slider round"></span>
+			</label>
+		</td>
+	</tr>
+</table>
+
+<button class="button" (click)="startEncounter()">Start Encounter</button>

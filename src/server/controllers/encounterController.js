@@ -1,7 +1,7 @@
 var Encounter = require('../models/encounters');
 
 // display list of all encounters.
-exports.encounter_list = function (req, res) {
+exports.encounters_list = function (req, res) {
 	Encounter.find(function (err, encounters) {
 		if (err) {
 			res.send(err);
@@ -23,11 +23,10 @@ exports.encounters_detail = function (req, res) {
 }
 
 // Handle Encounter create on Post
-exports.heroes_create_post = function (req, res) {
+exports.encounters_create_post = function (req, res) {
 	const encounter = new Encounter();
 	encounter.name = req.body.name;
-	encounter.heroes = req.body.heroes;
-	encounter.monsters = req.body.monsters;
+	encounter.combatants = req.body.combatants;
 
 	encounter.save(function (err) {
 		if (err) {
@@ -51,13 +50,12 @@ exports.encounters_delete_delete = function (req, res) {
 
 // Handle Encounter update on PUT
 exports.encounters_update_put = function (req, res) {
-	Encounter.findById(req.params._id, function (err, hero) {
+	Encounter.findById(req.params._id, function (err, encounter) {
 		if (err) {
 			res.send(err);
 		} else {
 			encounter.name = req.body.name;
-			encounter.heroes = req.body.heroes;
-			encounter.monsters = req.body.monsters;
+			encounter.combatants = req.body.combatants;
 
 			encounter.save(function (err) {
 				if (err) {

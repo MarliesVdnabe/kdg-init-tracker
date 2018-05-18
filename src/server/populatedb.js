@@ -12,6 +12,7 @@ const args = userArgs[0].trim();
 var async = require('async');
 var Hero = require('./models/heroes');
 var Monster = require('./models/monsters');
+var Combatant = require('./models/combatant');
 var Encounter = require('./models/encounters');
 
 var mongoose = require('mongoose');
@@ -24,6 +25,7 @@ mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection 
 var heroes = []
 var monsters = []
 var encounters = []
+var combatants = []
 
 function heroCreate(name, player, hitPoints, armorClass, initModifier, callback) {
 	hero_detail = { name: name, hitPoints: hitPoints, armorClass: armorClass, initModifier: initModifier }
@@ -57,9 +59,22 @@ function monsterCreate(name, hitPoints, armorClass, initModifier, callback) {
 	});
 }
 
-function encounterCreate(name, monsters, heroes, callback) {
-	encounter_detail = { name: name, monsters: monsters, heroes: heroes }
+function combatantCreate(originalId, name, player, type, hitPoints, currentHitPoints, armorClass, initModifier, initiative, played, callback) {
+	combatant_detail = { originalId: originalId, name: name, player: player, type: type, hitPoints: hitPoints, currentHitPoints: currentHitPoints, armorClass: armorClass, initModifier: initModifier, initiative: initiative, played: played }
+	var combatant = new Combatant(combatant_detail);
+	combatant.save(function (err) {
+		if (err) {
+			callback(err, null)
+			return
+		}
+		console.log('New Combatant: ' + combatant);
+		combatants.push(combatant)
+		callback(null, combatant)
+	})
+}
 
+function encounterCreate(name, combatants, callback) {
+	encounter_detail = { name: name, combatants: combatants }
 	var encounter = new Encounter(encounter_detail);
 	encounter.save(function (err) {
 		if (err) {
@@ -125,15 +140,25 @@ function createHeroes(callback) {
 		callback);
 }
 
+function createCombatants(callback) {
+	async.parallel([
+		function (callback) {
+			combatantCreate('5af5fe8fe424c33f0cca77fc', 'Hill Dwarf', false, 'hero', 11, 9, 18, -1, 4, false, callback);
+		},
+		function (callback) {
+			combatantCreate('5af5fe8fe424c33f0cca77fe', 'Halfling', false, 'hero', 12, 12, 16, 3, 8, false, callback);
+		},
+		function (callback) {
+			combatantCreate('5af5fe8ee424c33f0cca77fb', "Flesh Golem", false, 'monster', 93, 64, 9, -1, 3, false, callback);
+		},
+	], callback);
+}
 
 function createEncouters(callback) {
 	async.parallel([
 		function (callback) {
-			encounterCreate('The Kingkiller Chronicle', [monsters[0], monsters[4]], [heroes[4], heroes[1], heroes[0]], callback);
-		},
-		function (callback) {
-			encounterCreate('The Wizards Battle', [monsters[1], monsters[2]], [heroes[2], heroes[3], heroes[0]], callback);
-		},
+			encounterCreate('The Kingkiller Chronicle', [combatants[0], combatants[1], combatants[2]], callback);
+		}
 	],
 		// optional callback
 		callback);
@@ -142,6 +167,7 @@ function createEncouters(callback) {
 async.series([
 	createMonsters,
 	createHeroes,
+	createCombatants,
 	createEncouters
 ],
 	// Optional callback

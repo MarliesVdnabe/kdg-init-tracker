@@ -22,12 +22,14 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 const heroes = require('./routes/heroesRoutes');
 const monsters = require('./routes/monstersRoutes');
-// All of the routes will be prefixed with /api
+const combatants = require('./routes/combatantsRoutes');
+const encounters = require('./routes/encounterRoutes');
 
+// All of the routes will be prefixed with /api
 app.use('/api', heroes);
 app.use('/api', monsters);
-
-
+app.use('/api', combatants);
+app.use('/api', encounters);
 
 app.listen(8080, () => {
 	console.log('Server started!');

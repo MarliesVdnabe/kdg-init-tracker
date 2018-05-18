@@ -1,0 +1,92 @@
+@import '../../../../app.component.scss';
+table {
+	border-collapse: collapse;
+	width: 100%;
+	tr {
+		border: 1px solid #192231;
+	}
+	td {
+		width:50px;
+		text-align:center; 
+		padding: 1rem;
+    	font-weight: bold;
+	}
+	img {
+		height: 1.5rem;
+	}
+	.editImage {
+		height: .75rem;
+	}
+	.editImage:hover {
+		cursor: pointer;
+	}
+}
+
+// Set color for monsters and heroes
+// .monster {
+// 	border: 1px solid $Watermelon;
+// 	color: $Watermelon;
+// }
+
+// .hero {
+// 	border: 1px solid $Fresh;
+// 	color: $Fresh;
+// }
+
+// CSS for the slider
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 40px;
+	height: 20px;
+  }
+
+.switch input {
+	display:none;
+}
+
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+}
+  
+  .slider:before {
+	position: absolute;
+	content: "";
+	height: 15px;
+	width: 15px;
+	left: 4px;
+	bottom: 3px;
+	background-color: white;
+	-webkit-transition: .4s;
+	transition: .4s;
+}
+  
+input:checked + .slider {
+	background-color: $Teal;
+}
+  
+input:focus + .slider {
+	box-shadow: 0 0 1px $Teal;
+}
+  
+input:checked + .slider:before {
+	-webkit-transform: translateX(18px);
+	-ms-transform: translateX(18px);
+	transform: translateX(18px);
+}
+
+.slider.round {
+	border-radius: 34px;
+}
+  
+.slider.round:before {
+	border-radius: 50%;
+}

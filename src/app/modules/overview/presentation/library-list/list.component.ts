@@ -11,11 +11,17 @@ export class ListComponent implements OnInit {
 	@Input() heroes: Hero[];
 	@Input() monsters: Hero[];
 	@Output() onItemClicked: EventEmitter<any> = new EventEmitter<any>();
+	@Output() onEditPlayerClicked: EventEmitter<any> = new EventEmitter<any>();
 
 	constructor() { }
 	ngOnInit() { }
 
-	selectPlayer(monsterOrHero, id) {
-		this.onItemClicked.emit({ item: monsterOrHero, id: id });
+	editPlayer(monsterOrHero, id) {
+		this.onEditPlayerClicked.emit({ item: monsterOrHero, id: id });
+		console.log(monsterOrHero, id);
+	}
+
+	selectPlayer(monsterOrHero, details) {
+		this.onItemClicked.emit({ item: monsterOrHero, details: details });
 	}
 }
