@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { Hero } from '../../../../api/models/hero';
 import { PlayerType } from '../../../../api/enums/player-type';
+import { Encounter } from '../../../../api/models/encounter';
 
 @Component({
 	selector: 'app-list',
@@ -12,8 +13,9 @@ export class ListComponent implements OnChanges {
 	playerType = PlayerType;
 
 	@Input() players: Hero[];
-	@Output() onPlayerClicked: EventEmitter<Hero> = new EventEmitter<Hero>();
-	@Output() onEditPlayerClicked: EventEmitter<Hero> = new EventEmitter<Hero>();
+	@Input() encounters: Encounter[];
+	@Output() onItemClicked: EventEmitter<Hero | Encounter> = new EventEmitter<Hero | Encounter>();
+	@Output() onEditItemClicked: EventEmitter<Hero | Encounter> = new EventEmitter<Hero | Encounter>();
 	@Output() onAddPlayerClicked: EventEmitter<number> = new EventEmitter<number>();
 
 	constructor() { }
@@ -26,15 +28,15 @@ export class ListComponent implements OnChanges {
 		this.onAddPlayerClicked.emit(monsterOrHero);
 	}
 
-	editPlayer(player) {
-		this.onEditPlayerClicked.emit(player);
+	editItem(item) {
+		this.onEditItemClicked.emit(item);
 	}
 
-	selectPlayer(player) {
-		this.onPlayerClicked.emit(player);
+	selectItem(item) {
+		this.onItemClicked.emit(item);
 	}
 
-	// SORT LIST ALPHABETICAL
+	/* SORT LIST ALPHABETICAL */
 	sortList(list: Hero[]) {
 		if (!list) {
 			return;

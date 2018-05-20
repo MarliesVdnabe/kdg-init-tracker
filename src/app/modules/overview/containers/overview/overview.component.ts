@@ -5,6 +5,8 @@ import { RequestError } from '../../../../api/models/request-error';
 import { RequestResultType } from '../../../../api/enums/request-result-type';
 import { Hero } from '../../../../api/models/hero';
 import { PlayerType } from '../../../../api/enums/player-type';
+import { Encounter } from '../../../../api/models/encounter';
+import { Combatant } from '../../../../api/models/combatant';
 
 @Component({
 	selector: 'app-overview',
@@ -20,15 +22,19 @@ export class OverviewComponent implements OnInit {
 	lastListClicked: number;
 	updatedPlayer: Hero = null;
 	monsterOrHero: number;
+	encounter: Encounter;
+	encounters: Encounter[];
 
 	// Enums
 	playertype = PlayerType;
 
 	// STATE
-	loaded: Boolean = false;
+	monsterOrHeroloaded: Boolean = false;
+	encounterLoaded: Boolean = false;
 	enableCombatant: Boolean = false;
 	reload: Boolean = false;
 	createNewMonsterOrHero: Boolean = false;
+	enableEncounter: Boolean = false;
 
 	constructor(
 		private _overviewService: OverviewService
@@ -36,6 +42,42 @@ export class OverviewComponent implements OnInit {
 
 	ngOnInit() {
 		this.showMonsterOrHeroesList(0);
+	}
+
+	addEncounterToInitiative(encounter) {
+		this.combatants = [];
+		let combatant;
+		for (let i = 0; i < encounter.combatants.length; i++) {
+			this._overviewService.getCombatant(encounter.combatants[i])
+				.subscribe((combatnt: RequestResult<any | RequestError>) => {
+					if (combatnt.requestResultType === RequestResultType.Data) {
+						const cmb = combatnt.data as Combatant;
+						if (cmb.type === this.playertype.Monster) {
+							this._overviewService.getMonster(cmb.combatant[0])
+								.subscribe((monstr: RequestResult<any | RequestError>) => {
+									if (monstr.requestResultType === RequestResultType.Data) {
+										const monster = monstr.data as Hero;
+										combatant = { player: monster, tempId: null };
+										this.combatants.push(combatant);
+									} else {
+										console.log(monstr.data as RequestError);
+									}
+								});
+						} else {
+							this._overviewService.getHero(cmb.combatant[0])
+								.subscribe((her: RequestResult<any | RequestError>) => {
+									if (her.requestResultType === RequestResultType.Data) {
+										const hero = her.data as Hero;
+										combatant = { player: hero, tempId: null };
+										this.combatants.push(combatant);
+									}
+								});
+						}
+					} else {
+						console.log(combatnt.data as RequestError);
+					}
+				});
+		}
 	}
 
 	addPlayerToInitiative(player) {
@@ -54,6 +96,7 @@ export class OverviewComponent implements OnInit {
 	createNewPlayer(monsterOrHero) {
 		this.createNewMonsterOrHero = true;
 		this.enableCombatant = false;
+		this.enableEncounter = false;
 		this.monsterOrHero = monsterOrHero;
 	}
 
@@ -70,8 +113,16 @@ export class OverviewComponent implements OnInit {
 			});
 	}
 
+	saveEncounter(encounter: Encounter) {
+		this._overviewService.saveEncounter(encounter)
+			.subscribe((savedEncounter: RequestResult<any | RequestError>) => {
+				if (savedEncounter.requestResultType === RequestResultType.Data) {
+					console.log(savedEncounter);
+				}
+			});
+	}
+
 	savePlayer(player: Hero) {
-		console.log(player);
 		this._overviewService.createNewPlayer(player)
 			.subscribe((newPlayer: RequestResult<any | RequestError>) => {
 				if (newPlayer.requestResultType === RequestResultType.Data) {
@@ -82,13 +133,27 @@ export class OverviewComponent implements OnInit {
 			});
 	}
 
+	showEncountersList() {
+		this._overviewService.getAllEncounters()
+			.subscribe((encounters: RequestResult<any | RequestError>) => {
+				if (encounters.requestResultType === RequestResultType.Data) {
+					this.encounters = encounters.data;
+					this.monsterOrHeroloaded = false;
+					this.encounterLoaded = true;
+				} else {
+					console.log(encounters.data as RequestError);
+				}
+			});
+	}
+
 	showMonsterOrHeroesList(monsterOrHero: number) {
 		this.lastListClicked = monsterOrHero;
 		this._overviewService.getAllMonstersOrHeroes(monsterOrHero)
 			.subscribe((players: RequestResult<any | RequestError>) => {
 				if (players.requestResultType === RequestResultType.Data) {
 					this.players = players.data as Hero[];
-					this.loaded = true;
+					this.encounterLoaded = false;
+					this.monsterOrHeroloaded = true;
 				} else {
 					console.log(players.data as RequestError);
 				}
@@ -101,6 +166,7 @@ export class OverviewComponent implements OnInit {
 
 	viewCombatant(player) {
 		this.createNewMonsterOrHero = false;
+		this.enableEncounter = false;
 		this._overviewService.getMonsterOrHero(player)
 			.subscribe((viewPlayer: RequestResult<any | RequestError>) => {
 				if (viewPlayer.requestResultType === RequestResultType.Data) {
@@ -108,5 +174,12 @@ export class OverviewComponent implements OnInit {
 					this.enableCombatant = true;
 				}
 			});
+	}
+
+	viewEncounter(encounter) {
+		this.createNewMonsterOrHero = false;
+		this.enableCombatant = false;
+		this.enableEncounter = true;
+		this.encounter = encounter;
 	}
 }

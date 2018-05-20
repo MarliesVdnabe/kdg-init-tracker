@@ -7,8 +7,9 @@
 			<button class="button" (click)="showEncountersList()">Encounters</button>
 		</div>
 		<div>
-			<app-list *ngIf="loaded" [players]="players" (onPlayerClicked)="addPlayerToInitiative($event)" (onEditPlayerClicked)="viewCombatant($event)"
+			<app-list *ngIf="monsterOrHeroloaded" [players]="players" (onItemClicked)="addPlayerToInitiative($event)" (onEditItemClicked)="viewCombatant($event)"
 			 (onAddPlayerClicked)="createNewPlayer($event)"></app-list>
+			<app-list *ngIf="encounterLoaded" [encounters]="encounters" (onItemClicked)="addEncounterToInitiative($event)" (onEditItemClicked)="viewEncounter($event)"></app-list>
 		</div>
 	</div>
 	<div id="encounter">
@@ -20,6 +21,7 @@
 		<div>
 			<app-specs *ngIf="enableCombatant" [combatant]="combatant" (onSaveChanges)="editPlayer($event)"></app-specs>
 			<app-specs *ngIf="createNewMonsterOrHero" [monsterOrHero]="monsterOrHero" (onSaveChanges)="savePlayer($event)"></app-specs>
+			<app-specs *ngIf="enableEncounter" [encounter]="encounter" (onSaveEncounter)="saveEncounter($event)"></app-specs>
 		</div>
 	</div>
 </div>

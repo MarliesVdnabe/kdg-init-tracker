@@ -10,7 +10,9 @@ import { Hero } from '../../../../api/models/hero';
 export class InitiativeTableComponent implements OnChanges {
 	@Input() combatants;
 	@Input() updatedPlayer: Hero;
+	@Input() encountersList;
 	@Output() onStartEncounter: EventEmitter<any> = new EventEmitter<any>();
+	@Output() onSaveEncounter: EventEmitter<any> = new EventEmitter<any>();
 
 	constructor() { }
 

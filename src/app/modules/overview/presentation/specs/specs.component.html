@@ -1,6 +1,6 @@
 <h2 *ngIf="combatant">Edit {{playerType[combatant.type]}}</h2>
-<h2 *ngIf="!combatant">Create new {{playerType[monsterOrHero]}}</h2>
-<form [formGroup]="combatantForm" (ngSubmit)="saveChanges()">
+<h2 *ngIf="playerType[monsterOrHero]">Create new {{playerType[monsterOrHero]}}</h2>
+<form *ngIf="combatant || playerType[monsterOrHero]" [formGroup]="combatantForm" (ngSubmit)="saveChanges()">
 	<label for="name">Name:</label>
 	<input [ngClass]="{'invalid': !combatantForm.controls['Name'].valid && combatantForm.controls['Name'].touched }" type="text"
 	 id="name" formControlName="Name">
@@ -18,4 +18,12 @@
 	 type="number" id="initiative" formControlName="Initiative">
 	<button type="submit" class="button" [disabled]="combatantForm && !combatantForm.valid">Save Changes</button>
 	<!-- <button class="button" (click)="cancel()">Cancel</button> -->
+</form>
+
+<h2 *ngIf="encounter">Edit encounter</h2>
+<form *ngIf="encounter" [formGroup]="encounterForm" (ngSubmit)="saveEncounter()">
+	<label for="encounterName">Encounter name:</label>
+	<input [ngClass]="{'invalid': !encounterForm.controls['EncounterName'].valid && encounterForm.controls['EncounterName'].touched }"
+	 type="text" id="encounterName" formControlName="EncounterName">
+	<button type="submit" class="button">Save Changes</button>
 </form>

@@ -6,7 +6,7 @@ exports.encounters_list = function (req, res) {
 		if (err) {
 			res.send(err);
 		} else {
-			res.json(encounters);
+			res.status(200).json(encounters);
 		}
 	});
 }
@@ -32,7 +32,7 @@ exports.encounters_create_post = function (req, res) {
 		if (err) {
 			res.send(err);
 		} else {
-			res.json({ message: 'Encounter created' });
+			res.status(200).json(encounter);
 		}
 	});
 }
@@ -61,7 +61,7 @@ exports.encounters_update_put = function (req, res) {
 				if (err) {
 					res.send(err);
 				} else {
-					res.json({ message: 'Encounter succesfully updated' });
+					res.json(encounter);
 				}
 			});
 		}

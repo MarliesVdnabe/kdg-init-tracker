@@ -10,16 +10,15 @@ var encounter_controller = require('../controllers/encounterController');
 router.get('/encounters', encounter_controller.encounters_list);
 
 // POST request for creating an encounter
-router.post('/encounters/create', encounter_controller.encounters_create_post);
+router.post('/encounter/create', encounter_controller.encounters_create_post);
 
 // GET one encounter
-router.get('/encounters/:_id', encounter_controller.encounters_detail);
+router.get('/encounter/:_id', encounter_controller.encounters_detail);
 
 // DELETE request to delete an encounter
-router.delete('/heroes/:_id/delete', encounter_controller.encounters_delete_delete);
+router.delete('/encounter/:_id/delete', encounter_controller.encounters_delete_delete);
 
 // POST request to update an encounter
-router.post('/encounters/:_id/update', encounter_controller.encounters_update_put);
-
+router.post('/encounter/:_id/update', encounter_controller.encounters_update_put);
 
 module.exports = router;

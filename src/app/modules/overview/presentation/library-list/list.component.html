@@ -1,9 +1,18 @@
-<ul>
+<ul *ngIf="players">
 	<li class="hero" *ngFor="let player of players">
-		<span (click)="selectPlayer(player)">{{player.name}}</span>
-		<span (click)="editPlayer(player)">
+		<span (click)="selectItem(player)">{{player.name}}</span>
+		<span (click)="editItem(player)">
 			<img src="../../../../../assets/images/pencil_edit.png" alt="Edit">
 		</span>
 	</li>
 </ul>
-<button class="button" (click)="addNewplayer(players[0].type)">Add new {{playerType[players[0].type]}}</button>
+<button *ngIf="players" class="button" (click)="addNewplayer(players[0].type)">Add new {{playerType[players[0].type]}}</button>
+
+<ul *ngIf="!players">
+	<li class="hero" *ngFor="let encounter of encounters">
+		<span (click)="selectItem(encounter)">{{encounter.name}}</span>
+		<span (click)="editItem(encounter)">
+			<img src="../../../../../assets/images/pencil_edit.png" alt="Edit">
+		</span>
+	</li>
+</ul>

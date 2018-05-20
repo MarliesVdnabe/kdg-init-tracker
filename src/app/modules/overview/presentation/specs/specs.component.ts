@@ -2,6 +2,7 @@ import { Component, Input, Output, OnChanges, SimpleChanges, EventEmitter } from
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Hero } from '../../../../api/models/hero';
 import { PlayerType } from '../../../../api/enums/player-type';
+import { Encounter } from '../../../../api/models/encounter';
 
 @Component({
 	selector: 'app-specs',
@@ -12,9 +13,12 @@ import { PlayerType } from '../../../../api/enums/player-type';
 export class SpecsComponent implements OnChanges {
 	@Input() combatant: Hero;
 	@Input() monsterOrHero: number;
+	@Input() encounter: Encounter;
 	@Output() onSaveChanges: EventEmitter<Hero> = new EventEmitter<Hero>();
+	@Output() onSaveEncounter: EventEmitter<Encounter> = new EventEmitter<Encounter>();
 
 	combatantForm: FormGroup;
+	encounterForm: FormGroup;
 
 	// Enums
 	playerType = PlayerType;
@@ -29,6 +33,10 @@ export class SpecsComponent implements OnChanges {
 			'Armorclass': ['', Validators.compose([Validators.required, Validators.min(0)])],
 			'Initiative': ['', Validators.compose([Validators.required, Validators.min(-1), Validators.max(10)])]
 		});
+
+		this.encounterForm = _fb.group({
+			'EncounterName': ['', Validators.required]
+		});
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
@@ -38,10 +46,15 @@ export class SpecsComponent implements OnChanges {
 	cancel() {
 	}
 
+	saveEncounter() {
+		const model = this.encounterForm.value;
+		this.encounter.name = model.EncounterName;
+		this.onSaveEncounter.emit(this.encounter);
+	}
+
 	saveChanges() {
 		const model = this.combatantForm.value;
 		if (this.combatant) {
-			const changedCombatant = this.combatant;
 			this.combatant.name = model.Name;
 			this.combatant.armorClass = model.Armorclass;
 			this.combatant.hitPoints = model.Hitpoints;
@@ -74,6 +87,8 @@ export class SpecsComponent implements OnChanges {
 			if (this.combatant.type === this.playerType.Hero) {
 				this.combatantForm.get('Player').setValue(this.combatant.player);
 			}
+		} else if (this.encounter) {
+			this.encounterForm.get('EncounterName').setValue(this.encounter.name);
 		}
 	}
 }
