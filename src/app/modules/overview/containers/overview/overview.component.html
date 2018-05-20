@@ -14,7 +14,8 @@
 	</div>
 	<div id="encounter">
 		<div>
-			<app-initiative-table *ngIf="combatants.length" [updatedPlayer]='updatedPlayer' [combatants]="combatants" (onStartEncounter)="startEncounter($event)"></app-initiative-table>
+			<app-initiative-table *ngIf="combatants.length" [updatedPlayer]='updatedPlayer' [combatants]="combatants" (onStartEncounter)="startEncounter($event)"
+			 (onSaveEncounter)="saveCombatantsToEncounter($event)"></app-initiative-table>
 		</div>
 	</div>
 	<div id="specs">

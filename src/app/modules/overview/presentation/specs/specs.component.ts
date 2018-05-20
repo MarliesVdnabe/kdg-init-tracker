@@ -88,6 +88,7 @@ export class SpecsComponent implements OnChanges {
 				this.combatantForm.get('Player').setValue(this.combatant.player);
 			}
 		} else if (this.encounter) {
+			console.log(this.encounter);
 			this.encounterForm.get('EncounterName').setValue(this.encounter.name);
 		}
 	}

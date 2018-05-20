@@ -1,8 +1,9 @@
 import { PlayerType } from '../enums/player-type';
+import { Hero } from './hero';
 
 export class Combatant {
-	id: string;
-	combatant: string[];
+	_id?: string;
+	combatant: string[] | Hero;
 	type: PlayerType;
 	initiative: number;
 	played: boolean;
@@ -10,7 +11,7 @@ export class Combatant {
 
 	constructor(json?: any) {
 		if (json) {
-			this.id = json.id;
+			this._id = json._id;
 			this.combatant = json.combatant;
 			this.type = json.type;
 			this.initiative = json.initiative;

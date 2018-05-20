@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Hero } from '../../../../api/models/hero';
+import { Combatant } from '../../../../api/models/combatant';
 
 @Component({
 	selector: 'app-initiative-table',
@@ -12,7 +13,7 @@ export class InitiativeTableComponent implements OnChanges {
 	@Input() updatedPlayer: Hero;
 	@Input() encountersList;
 	@Output() onStartEncounter: EventEmitter<any> = new EventEmitter<any>();
-	@Output() onSaveEncounter: EventEmitter<any> = new EventEmitter<any>();
+	@Output() onSaveEncounter: EventEmitter<Hero[]> = new EventEmitter<Hero[]>();
 
 	constructor() { }
 
@@ -36,5 +37,9 @@ export class InitiativeTableComponent implements OnChanges {
 
 	startEncounter() {
 		this.onStartEncounter.emit(this.combatants);
+	}
+
+	saveEncounter() {
+		this.onSaveEncounter.emit(this.combatants);
 	}
 }

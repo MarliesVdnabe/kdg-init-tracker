@@ -25,5 +25,5 @@
 	<label for="encounterName">Encounter name:</label>
 	<input [ngClass]="{'invalid': !encounterForm.controls['EncounterName'].valid && encounterForm.controls['EncounterName'].touched }"
 	 type="text" id="encounterName" formControlName="EncounterName">
-	<button type="submit" class="button">Save Changes</button>
+	<button type="submit" class="button" [disabled]="encounterForm && !encounterForm.valid">Save Changes</button>
 </form>

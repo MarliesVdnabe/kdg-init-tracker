@@ -113,11 +113,31 @@ export class OverviewComponent implements OnInit {
 			});
 	}
 
+	saveCombatantsToEncounter(combatants) {
+		const combatantList = [];
+		let combatnt;
+		for (let i = 0; i < combatants.length; i++) {
+			combatnt = {
+				combatant: combatants[i].player, type: combatants[i].player.type, initiative: 0, played: false,
+				currentHitPoints: combatants[i].player.hitPoints
+			};
+			combatantList.push(combatnt);
+
+		}
+		console.log(combatantList);
+
+		// TODO: PUSH DEZE LIJST NAAR BACKEND EN VRAAG ID VAN ELKE COMBATANT TRG OP
+		// TODO: MAAK VAN DE ID'S EEN ARRAY EN CREEER INSTANTIE ENCOUTER VOLGENS:
+		// ENCOUNTER = {combatants = [id's], name: string}
+		// STUUR DIT OP NAAR DE BACKEND
+		// ENCOUNTER IS GESAVED EN LIJST MET ENCOUNTERS MOET GEUPDETED WORDEN.
+	}
+
 	saveEncounter(encounter: Encounter) {
 		this._overviewService.saveEncounter(encounter)
 			.subscribe((savedEncounter: RequestResult<any | RequestError>) => {
 				if (savedEncounter.requestResultType === RequestResultType.Data) {
-					console.log(savedEncounter);
+					console.log(savedEncounter.data);
 				}
 			});
 	}
