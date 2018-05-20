@@ -15,4 +15,27 @@ html {
 	cursor: pointer;
 	border-radius: 4px;
 	border: 1px solid transparent;
+	background-color: #056571;
+	color: #fff;
+}
+
+button:hover {
+	background-color: #24d8ab;
+	
+}
+
+input {
+	width: 100%;
+	padding: 12px 20px;
+	margin: 8px 0;
+	display: inline-block;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+	color: #414141;
+}
+
+input:focus {
+	border: 1px solid #056571;
+	border-radius: 4px;
 }

@@ -26,15 +26,16 @@ exports.monsters_detail = function (req, res) {
 exports.monster_create_post = function (req, res) {
 	const monster = new Monster();
 	monster.name = req.body.name;
+	monster.type = req.body.type;
 	monster.hitPoints = req.body.hitPoints;
 	monster.armorClass = req.body.armorClass;
 	monster.initModifier = req.body.initModifier;
 
 	monster.save(function (err) {
 		if (err) {
-			res.send(err);
+			res.status(400).send(err);
 		} else {
-			res.json({ message: 'Monster created' });
+			res.json(monster);
 		}
 	})
 };
@@ -57,6 +58,7 @@ exports.monster_update_put = function (req, res) {
 			res.send(err);
 		} else {
 			monster.name = req.body.name;
+			monster.type = req.body.type;
 			monster.hitPoints = req.body.hitPoints;
 			monster.armorClass = req.body.armorClass;
 			monster.initModifier = req.body.initModifier;
@@ -65,7 +67,7 @@ exports.monster_update_put = function (req, res) {
 				if (err) {
 					res.send(err);
 				} else {
-					res.json({ message: 'Monster succesfully updated' });
+					res.json(monster);
 				}
 			});
 		}

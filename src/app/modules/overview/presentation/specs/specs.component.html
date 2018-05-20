@@ -1,4 +1,21 @@
-<form [formGroup]="combatantForm">
+<h2 *ngIf="combatant">Edit {{playerType[combatant.type]}}</h2>
+<h2 *ngIf="!combatant">Create new {{playerType[monsterOrHero]}}</h2>
+<form [formGroup]="combatantForm" (ngSubmit)="saveChanges()">
 	<label for="name">Name:</label>
-	<input type="text" id="name" formControlName="Name">
+	<input [ngClass]="{'invalid': !combatantForm.controls['Name'].valid && combatantForm.controls['Name'].touched }" type="text"
+	 id="name" formControlName="Name">
+	<label *ngIf="playerType[monsterOrHero]==='Hero' || combatant && playerType[combatant.type]==='Hero'" for="player">Player:</label>
+	<input *ngIf="playerType[monsterOrHero]==='Hero' || combatant && playerType[combatant.type]==='Hero'" type="text" id="player"
+	 formControlName="Player">
+	<label for="hitPoints">Hitpoints</label>
+	<input [ngClass]="{'invalid': !combatantForm.controls['Hitpoints'].valid && combatantForm.controls['Hitpoints'].touched}"
+	 type="number" id="hitPoints" formControlName="Hitpoints">
+	<label for="armorClass">Armorclass:</label>
+	<input [ngClass]="{'invalid': !combatantForm.controls['Armorclass'].valid && combatantForm.controls['Armorclass'].touched}"
+	 type="number" id="armorClass" formControlName="Armorclass">
+	<label for="initiative">Initiative:</label>
+	<input [ngClass]="{'invalid': !combatantForm.controls['Initiative'].valid && combatantForm.controls['Initiative'].touched}"
+	 type="number" id="initiative" formControlName="Initiative">
+	<button type="submit" class="button" [disabled]="combatantForm && !combatantForm.valid">Save Changes</button>
+	<!-- <button class="button" (click)="cancel()">Cancel</button> -->
 </form>

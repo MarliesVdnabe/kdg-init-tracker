@@ -27,12 +27,13 @@ var monsters = []
 var encounters = []
 var combatants = []
 
-function heroCreate(name, player, hitPoints, armorClass, initModifier, callback) {
-	hero_detail = { name: name, hitPoints: hitPoints, armorClass: armorClass, initModifier: initModifier }
+function heroCreate(name, player, type, hitPoints, armorClass, initModifier, callback) {
+	hero_detail = { name: name, type: type, hitPoints: hitPoints, armorClass: armorClass, initModifier: initModifier }
 	if (player != false) {
 		hero_detail.player = player;
+	} else {
+		hero_detail.player = null;
 	}
-
 	var hero = new Hero(hero_detail);
 	hero.save(function (err) {
 		if (err) {
@@ -45,8 +46,8 @@ function heroCreate(name, player, hitPoints, armorClass, initModifier, callback)
 	});
 }
 
-function monsterCreate(name, hitPoints, armorClass, initModifier, callback) {
-	monster_detail = { name: name, hitPoints: hitPoints, armorClass: armorClass, initModifier: initModifier }
+function monsterCreate(name, type, hitPoints, armorClass, initModifier, callback) {
+	monster_detail = { name: name, type: type, hitPoints: hitPoints, armorClass: armorClass, initModifier: initModifier }
 	var monster = new Monster(monster_detail);
 	monster.save(function (err) {
 		if (err) {
@@ -59,8 +60,8 @@ function monsterCreate(name, hitPoints, armorClass, initModifier, callback) {
 	});
 }
 
-function combatantCreate(originalId, name, player, type, hitPoints, currentHitPoints, armorClass, initModifier, initiative, played, callback) {
-	combatant_detail = { originalId: originalId, name: name, player: player, type: type, hitPoints: hitPoints, currentHitPoints: currentHitPoints, armorClass: armorClass, initModifier: initModifier, initiative: initiative, played: played }
+function combatantCreate(combatant, type, currentHitPoints, initiative, played, callback) {
+	combatant_detail = { combatant: combatant, type: type, currentHitPoints: currentHitPoints, initiative: initiative, played: played }
 	var combatant = new Combatant(combatant_detail);
 	combatant.save(function (err) {
 		if (err) {
@@ -90,28 +91,28 @@ function encounterCreate(name, combatants, callback) {
 function createMonsters(cb) {
 	async.parallel([
 		function (callback) {
-			monsterCreate('Red Dragon', 75, 17, -1, callback);
+			monsterCreate('Red Dragon', 0, 75, 17, -1, callback);
 		},
 		function (callback) {
-			monsterCreate('Spider', 1, 12, 2, callback);
+			monsterCreate('Spider', 0, 1, 12, 2, callback);
 		},
 		function (callback) {
-			monsterCreate('Swarm of Poisonous Snakes', 36, 14, 5, callback);
+			monsterCreate('Swarm of Poisonous Snakes', 0, 36, 14, 5, callback);
 		},
 		function (callback) {
-			monsterCreate('Vampire', 58, 15, 4, callback);
+			monsterCreate('Vampire', 0, 23, 15, 4, callback);
 		},
 		function (callback) {
-			monsterCreate('Werewolf', 58, 11, 5, callback);
+			monsterCreate('Werewolf', 0, 43, 21, 5, callback);
 		},
 		function (callback) {
-			monsterCreate("Awakened Tree", 58, 11, 0, callback);
+			monsterCreate("Awakened Tree", 0, 58, 11, 0, callback);
 		},
 		function (callback) {
-			monsterCreate("Black Pudding", 168, 17, -3, callback);
+			monsterCreate("Black Pudding", 0, 168, 17, -3, callback);
 		},
 		function (callback) {
-			monsterCreate("Flesh Golem", 93, 9, -1, callback);
+			monsterCreate("Flesh Golem", 0, 93, 9, -1, callback);
 		},
 	],
 		// optional callback
@@ -121,19 +122,19 @@ function createMonsters(cb) {
 function createHeroes(callback) {
 	async.parallel([
 		function (callback) {
-			heroCreate('Hill Dwarf', false, 11, 18, -1, callback);
+			heroCreate('Hill Dwarf', false, 1, 11, 18, -1, callback);
 		},
 		function (callback) {
-			heroCreate('Underfoot', 'Jeroen', 9, 14, 3, callback);
+			heroCreate('Underfoot', 'Jeroen', 1, 9, 14, 3, callback);
 		},
 		function (callback) {
-			heroCreate('Halfling', false, 12, 16, 3, callback);
+			heroCreate('Halfling', false, 1, 10, 16, 3, callback);
 		},
 		function (callback) {
-			heroCreate('Elf Wizard', false, 12, 22, 4, callback);
+			heroCreate('Elf Wizard', false, 1, 12, 22, 4, callback);
 		},
 		function (callback) {
-			heroCreate('Human Fighter', false, 12, 17, 2, callback);
+			heroCreate('Human Fighter', false, 1, 8, 17, 2, callback);
 		},
 	],
 		// optional callback
@@ -143,13 +144,13 @@ function createHeroes(callback) {
 function createCombatants(callback) {
 	async.parallel([
 		function (callback) {
-			combatantCreate('5af5fe8fe424c33f0cca77fc', 'Hill Dwarf', false, 'hero', 11, 9, 18, -1, 4, false, callback);
+			combatantCreate(heroes[0], 1, 9, 4, false, callback);
 		},
 		function (callback) {
-			combatantCreate('5af5fe8fe424c33f0cca77fe', 'Halfling', false, 'hero', 12, 12, 16, 3, 8, false, callback);
+			combatantCreate(heroes[3], 1, 12, 8, false, callback);
 		},
 		function (callback) {
-			combatantCreate('5af5fe8ee424c33f0cca77fb', "Flesh Golem", false, 'monster', 93, 64, 9, -1, 3, false, callback);
+			combatantCreate(monsters[0], 0, 64, 3, false, callback);
 		},
 	], callback);
 }

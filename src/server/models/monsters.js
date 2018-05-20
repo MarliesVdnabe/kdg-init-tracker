@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const MonsterSchema = new Schema({
 	name: { type: String },
+	type: { type: Number },
 	hitPoints: { type: Number },
 	armorClass: { type: Number },
 	initModifier: { type: Number }

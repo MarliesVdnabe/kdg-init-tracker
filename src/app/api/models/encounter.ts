@@ -1,13 +1,11 @@
-import { Hero } from './hero';
+import { Combatant } from './combatant';
 
 export class Encounter {
 	name: string;
-	monsters: Hero[];
-	heroes: Hero[];
+	combatants: Combatant[];
 
 	constructor(json: any) {
 		this.name = json.name;
-		this.monsters = json.monsters;
-		this.heroes = json.heroes;
+		this.combatants = json.combatants.map(combatant => new Combatant(combatant));
 	}
 }

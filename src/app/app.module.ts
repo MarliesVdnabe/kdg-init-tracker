@@ -21,7 +21,7 @@ const appRoutes: Routes = [
 		FormsModule,
 		ReactiveFormsModule,
 		RouterModule.forRoot(appRoutes, {}),
-		DomainServicesModule.forRoot()
+		DomainServicesModule.forRoot(),
 	],
 	providers: [],
 	bootstrap: [AppComponent]

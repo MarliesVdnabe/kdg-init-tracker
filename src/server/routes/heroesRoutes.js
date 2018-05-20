@@ -10,15 +10,15 @@ var hero_controller = require('../controllers/heroController');
 router.get('/heroes', hero_controller.heroes_list);
 
 // POST request for creating a Hero
-router.post('/heroes/create', hero_controller.heroes_create_post);
+router.post('/hero/create', hero_controller.heroes_create_post);
 
 // GET one Hero
-router.get('/heroes/:_id', hero_controller.heroes_detail);
+router.get('/hero/:_id', hero_controller.heroes_detail);
 
 // DELETE request to delete a Hero.
-router.delete('/heroes/:_id/delete', hero_controller.heroes_delete_delete);
+router.delete('/hero/:_id/delete', hero_controller.heroes_delete_delete);
 
 // POST request to update a Hero.
-router.post('/heroes/:_id/update', hero_controller.heroes_update_put);
+router.post('/hero/:_id/update', hero_controller.heroes_update_put);
 
 module.exports = router;

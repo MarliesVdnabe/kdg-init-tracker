@@ -1,3 +1,4 @@
+<h2>Initiative order</h2>
 <table>
 	<tr>
 		<th>Combatant</th>
@@ -11,13 +12,10 @@
 		<th>Visibility</th>
 	</tr>
 	<tr *ngFor="let combatant of combatants" class="{{combatant.item}}">
-		<td>{{combatant.details.name}} {{combatant.tempId}}</td>
-		<td>{{combatant.details.hitPoints}}/{{combatant.details.hitPoints}}</td>
-		<td>{{combatant.details.armorClass}}</td>
-		<!-- <td (click)="editCombatant(combatant.details._id, combatant.item)">
-			<img class="editImage" src="../../../../../assets/images/pencil_edit.png" alt="edit">
-		</td> -->
-		<td (click)="removeCombatant(combatant.details.name, combatant.tempId)">
+		<td>{{combatant.player.name | uppercase}} {{combatant.tempId}}</td>
+		<td>{{combatant.player.hitPoints}}/{{combatant.player.hitPoints}}</td>
+		<td>{{combatant.player.armorClass}}</td>
+		<td (click)="removeCombatant(combatant.player.name, combatant.tempId)">
 			<img class="editImage" src="../../../../../assets/images/cancel.png" alt="remove">
 		</td>
 		<td>
@@ -30,3 +28,4 @@
 </table>
 
 <button class="button" (click)="startEncounter()">Start Encounter</button>
+<button class="button" (click)="saveEncounter()">Save Encounter</button>

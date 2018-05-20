@@ -16,4 +16,18 @@ export abstract class BaseRestApiService {
 			.map(res => new RequestResult(RequestResultType.Data, res))
 			.catch(handleHttpErrorResponse);
 	}
+
+	protected post(relativeUrl: string, data?: any, headers?: HttpHeaders): Observable<RequestResult<any | RequestError>> {
+		return this.http.post(relativeUrl, data, this.setRequestOptions(headers))
+			.map(res => new RequestResult(RequestResultType.Data, res))
+			.catch(handleHttpErrorResponse);
+	}
+
+	private setRequestOptions(header?: HttpHeaders): { headers: HttpHeaders } {
+		const headers = header || new HttpHeaders();
+		if (!headers.has('Content-Type')) {
+			headers.append('Content-Type', 'application/json');
+		}
+		return { headers };
+	}
 }

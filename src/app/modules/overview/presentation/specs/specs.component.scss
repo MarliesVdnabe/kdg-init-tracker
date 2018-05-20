@@ -1,0 +1,8 @@
+@import '../../../../app.component.scss';
+label {
+	font-weight: bold;
+}
+
+.invalid {
+	border: 1px solid $Watermelon;
+}
