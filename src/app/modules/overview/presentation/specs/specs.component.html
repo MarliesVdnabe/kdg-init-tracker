@@ -17,7 +17,7 @@
 	<input [ngClass]="{'invalid': !combatantForm.controls['Initiative'].valid && combatantForm.controls['Initiative'].touched}"
 	 type="number" id="initiative" formControlName="Initiative">
 	<button type="submit" class="button" [disabled]="combatantForm && !combatantForm.valid">Save Changes</button>
-	<!-- <button class="button" (click)="cancel()">Cancel</button> -->
+	<button type="button" class="button" (click)="cancel()">Cancel</button>
 </form>
 
 <h2 *ngIf="encounter">Edit encounter</h2>
@@ -26,4 +26,14 @@
 	<input [ngClass]="{'invalid': !encounterForm.controls['EncounterName'].valid && encounterForm.controls['EncounterName'].touched }"
 	 type="text" id="encounterName" formControlName="EncounterName">
 	<button type="submit" class="button" [disabled]="encounterForm && !encounterForm.valid">Save Changes</button>
+	<button type="button" class="button" (click)="cancel()">Cancel</button>
+</form>
+
+<h2 *ngIf="combatantsList">Create new encounter</h2>
+<form *ngIf="combatantsList" [formGroup]="encounterForm" (ngSubmit)="saveEncounter()">
+	<label for="encounterName">Encounter name:</label>
+	<input [ngClass]="{'invalid': !encounterForm.controls['EncounterName'].valid && encounterForm.controls['EncounterName'].touched }"
+	 type="text" id="encounterName" formControlName="EncounterName">
+	<button type="submit" class="button" [disabled]="encounterForm && !encounterForm.valid">Save Changes</button>
+	<button type="button" class="button" (click)="cancel()">Cancel</button>
 </form>

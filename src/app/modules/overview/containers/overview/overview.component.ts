@@ -7,6 +7,7 @@ import { Hero } from '../../../../api/models/hero';
 import { PlayerType } from '../../../../api/enums/player-type';
 import { Encounter } from '../../../../api/models/encounter';
 import { Combatant } from '../../../../api/models/combatant';
+import { Router } from '@angular/router/';
 
 @Component({
 	selector: 'app-overview',
@@ -24,6 +25,9 @@ export class OverviewComponent implements OnInit {
 	monsterOrHero: number;
 	encounter: Encounter;
 	encounters: Encounter[];
+	combatantsList = [];
+	encounterId: string;
+	newEncounterId: string;
 
 	// Enums
 	playertype = PlayerType;
@@ -34,10 +38,12 @@ export class OverviewComponent implements OnInit {
 	enableCombatant: Boolean = false;
 	reload: Boolean = false;
 	createNewMonsterOrHero: Boolean = false;
+	createNewEncounter: Boolean = false;
 	enableEncounter: Boolean = false;
 
 	constructor(
-		private _overviewService: OverviewService
+		private _overviewService: OverviewService,
+		private _router: Router,
 	) { }
 
 	ngOnInit() {
@@ -45,6 +51,7 @@ export class OverviewComponent implements OnInit {
 	}
 
 	addEncounterToInitiative(encounter) {
+		this.encounterId = encounter._id;
 		this.combatants = [];
 		let combatant;
 		for (let i = 0; i < encounter.combatants.length; i++) {
@@ -81,6 +88,7 @@ export class OverviewComponent implements OnInit {
 	}
 
 	addPlayerToInitiative(player) {
+		this.encounterId = undefined;
 		const combatant = { player: player, tempId: null };
 		// SEE IF COMBATANT IS ALREADY IN LIST AND ADD TEMPID
 		for (let i = 0; i < this.combatants.length; i++) {
@@ -93,10 +101,31 @@ export class OverviewComponent implements OnInit {
 		this.combatants.push(combatant);
 	}
 
+	cancel() {
+		this.createNewMonsterOrHero = false;
+		this.createNewEncounter = false;
+		this.enableCombatant = false;
+		this.enableEncounter = false;
+	}
+
+	createEncounter(encounter) {
+		this._overviewService.createNewEncounter(encounter)
+			.subscribe((enc: RequestResult<any | RequestError>) => {
+				if (enc.requestResultType === RequestResultType.Data) {
+					console.log(enc.data);
+					const data = enc.data;
+					this.newEncounterId = data._id;
+				} else {
+					console.log(enc.data as RequestError);
+				}
+			});
+	}
+
 	createNewPlayer(monsterOrHero) {
 		this.createNewMonsterOrHero = true;
 		this.enableCombatant = false;
 		this.enableEncounter = false;
+		this.createNewEncounter = false;
 		this.monsterOrHero = monsterOrHero;
 	}
 
@@ -114,30 +143,22 @@ export class OverviewComponent implements OnInit {
 	}
 
 	saveCombatantsToEncounter(combatants) {
-		const combatantList = [];
-		let combatnt;
-		for (let i = 0; i < combatants.length; i++) {
-			combatnt = {
-				combatant: combatants[i].player, type: combatants[i].player.type, initiative: 0, played: false,
-				currentHitPoints: combatants[i].player.hitPoints
-			};
-			combatantList.push(combatnt);
-
-		}
-		console.log(combatantList);
-
-		// TODO: PUSH DEZE LIJST NAAR BACKEND EN VRAAG ID VAN ELKE COMBATANT TRG OP
-		// TODO: MAAK VAN DE ID'S EEN ARRAY EN CREEER INSTANTIE ENCOUTER VOLGENS:
-		// ENCOUNTER = {combatants = [id's], name: string}
-		// STUUR DIT OP NAAR DE BACKEND
-		// ENCOUNTER IS GESAVED EN LIJST MET ENCOUNTERS MOET GEUPDETED WORDEN.
+		this.savePlayerToCombatant(combatants);
+		setTimeout(() => {
+			this.createNewEncounter = true;
+			this.createNewMonsterOrHero = false;
+			this.enableCombatant = false;
+			this.enableEncounter = false;
+		}, 200);
 	}
 
 	saveEncounter(encounter: Encounter) {
 		this._overviewService.saveEncounter(encounter)
 			.subscribe((savedEncounter: RequestResult<any | RequestError>) => {
 				if (savedEncounter.requestResultType === RequestResultType.Data) {
-					console.log(savedEncounter.data);
+					this.createNewEncounter = false;
+				} else {
+					console.log(savedEncounter.data as RequestError);
 				}
 			});
 	}
@@ -151,6 +172,25 @@ export class OverviewComponent implements OnInit {
 					console.log(newPlayer.data as RequestError);
 				}
 			});
+	}
+
+	savePlayerToCombatant(combatants): void {
+		let combatnt;
+		for (let i = 0; i < combatants.length; i++) {
+			combatnt = {
+				combatant: combatants[i].player, type: combatants[i].player.type, initiative: 0, played: false,
+				currentHitPoints: combatants[i].player.hitPoints
+			};
+			this._overviewService.createNewCombatants(combatnt)
+				.subscribe(combatant => {
+					if (combatant.requestResultType === RequestResultType.Data) {
+						const data = combatant.data;
+						this.combatantsList.push(data._id);
+					} else {
+						console.log(combatant as RequestError);
+					}
+				});
+		}
 	}
 
 	showEncountersList() {
@@ -180,12 +220,27 @@ export class OverviewComponent implements OnInit {
 			});
 	}
 
-	startEncounter(event) {
-		console.log(event);
+	startEncounter(combatantsOrString) {
+		if (combatantsOrString instanceof Array) {
+			this.savePlayerToCombatant(combatantsOrString);
+			setTimeout(() => {
+				const newEncounter = new Encounter();
+				newEncounter.combatants = this.combatantsList;
+				newEncounter.name = null;
+				this.createEncounter(newEncounter);
+				setTimeout(() => {
+					this._router.navigate(['/encounter', this.newEncounterId]);
+				}, 200);
+			}, 200);
+
+		} else {
+			this._router.navigate(['/encounter/', combatantsOrString]);
+		}
 	}
 
 	viewCombatant(player) {
 		this.createNewMonsterOrHero = false;
+		this.createNewEncounter = false;
 		this.enableEncounter = false;
 		this._overviewService.getMonsterOrHero(player)
 			.subscribe((viewPlayer: RequestResult<any | RequestError>) => {
@@ -198,6 +253,7 @@ export class OverviewComponent implements OnInit {
 
 	viewEncounter(encounter) {
 		this.createNewMonsterOrHero = false;
+		this.createNewEncounter = false;
 		this.enableCombatant = false;
 		this.enableEncounter = true;
 		this.encounter = encounter;

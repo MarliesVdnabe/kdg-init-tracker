@@ -5,7 +5,7 @@ export class Encounter {
 	name: string;
 	combatants: Combatant[];
 
-	constructor(json: any) {
+	constructor(json?: any) {
 		if (json) {
 			this._id = json._id;
 			this.name = json.name;

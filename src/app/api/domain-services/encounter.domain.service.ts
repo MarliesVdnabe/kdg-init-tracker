@@ -11,8 +11,16 @@ export class EncounterDomainService {
 		private _encounterApiService: EncounterApiService
 	) { }
 
+	createNewEncounter(encounter: Encounter): Observable<any | RequestError> {
+		return this._encounterApiService.createNewEncounter(encounter);
+	}
+
 	getAllEncounters(): Observable<any | RequestError> {
 		return this._encounterApiService.getAllEncounters();
+	}
+
+	getEncounter(id: string): Observable<any | RequestError> {
+		return this._encounterApiService.getEncounter(id);
 	}
 
 	saveEncounter(encounter: Encounter): Observable<any | RequestError> {

@@ -21,8 +21,30 @@ export class EncounterApiService extends BaseRestApiService {
 		super(http);
 	}
 
+	createNewEncounter(encounter: Encounter): Observable<any | RequestError> {
+		return this.post(`${this.encounterUrl}/encounter/create`, encounter)
+			.map((result: RequestResult<any | RequestError>) => {
+				if (result.requestResultType === RequestResultType.Data) {
+					return new RequestResult(result.requestResultType, result.data);
+				} else {
+					return result.data as RequestResult<RequestError>;
+				}
+			});
+	}
+
 	getAllEncounters(): Observable<any | RequestError> {
 		return this.get(`${this.encounterUrl}/encounters`)
+			.map((result: RequestResult<any | RequestError>) => {
+				if (result.requestResultType === RequestResultType.Data) {
+					return new RequestResult(result.requestResultType, result.data);
+				} else {
+					return result.data as RequestResult<RequestError>;
+				}
+			});
+	}
+
+	getEncounter(id: string): Observable<any | RequestError> {
+		return this.get(`${this.encounterUrl}/encounter/${id}`)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
 					return new RequestResult(result.requestResultType, result.data);

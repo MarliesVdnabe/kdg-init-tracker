@@ -5,11 +5,13 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { OverviewModule } from './modules/overview/overview.module';
+import { EncounterModule } from './modules/encounter/encounter.module';
 import { DomainServicesModule } from './api/domain-services/domain-services.module';
 
 const appRoutes: Routes = [
 	{ path: 'overview', loadChildren: './modules/overview/overview.module#OverviewModule' },
-	{ path: '', redirectTo: 'overview', pathMatch: 'full' }
+	{ path: '', redirectTo: 'overview', pathMatch: 'full' },
+	{ path: 'encounter/:id', loadChildren: './modules/encounter/encounter.module#EncounterModule' }
 ];
 
 @NgModule({

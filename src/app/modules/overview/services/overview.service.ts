@@ -90,6 +90,10 @@ export class OverviewService {
 
 	/* ENCOUNTERS */
 
+	createNewEncounter(encounter: Encounter): Observable<any | RequestError> {
+		return this._encounterService.createNewEncounter(encounter);
+	}
+
 	getAllEncounters(): Observable<any | RequestError> {
 		return this._encounterService.getAllEncounters();
 	}
@@ -99,6 +103,10 @@ export class OverviewService {
 	}
 
 	/* COMBATANTS */
+	createNewCombatants(combatant: Combatant): Observable<any | RequestError> {
+		return this._combatantService.createNewCombatants(combatant);
+	}
+
 	getCombatant(id: string): Observable<any | RequestError> {
 		return this._combatantService.getCombatant(id);
 	}

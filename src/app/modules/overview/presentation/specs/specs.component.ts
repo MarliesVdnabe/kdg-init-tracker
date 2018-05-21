@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Hero } from '../../../../api/models/hero';
 import { PlayerType } from '../../../../api/enums/player-type';
 import { Encounter } from '../../../../api/models/encounter';
+import { Combatant } from '../../../../api/models/combatant';
 
 @Component({
 	selector: 'app-specs',
@@ -14,8 +15,10 @@ export class SpecsComponent implements OnChanges {
 	@Input() combatant: Hero;
 	@Input() monsterOrHero: number;
 	@Input() encounter: Encounter;
+	@Input() combatantsList: Combatant[];
 	@Output() onSaveChanges: EventEmitter<Hero> = new EventEmitter<Hero>();
 	@Output() onSaveEncounter: EventEmitter<Encounter> = new EventEmitter<Encounter>();
+	@Output() onCancelClicked: EventEmitter<null> = new EventEmitter();
 
 	combatantForm: FormGroup;
 	encounterForm: FormGroup;
@@ -44,12 +47,20 @@ export class SpecsComponent implements OnChanges {
 	}
 
 	cancel() {
+		this.onCancelClicked.emit();
 	}
 
 	saveEncounter() {
 		const model = this.encounterForm.value;
-		this.encounter.name = model.EncounterName;
-		this.onSaveEncounter.emit(this.encounter);
+		const encounter = new Encounter();
+		if (this.combatantsList) {
+			encounter.name = model.EncounterName;
+			encounter.combatants = this.combatantsList;
+			this.onSaveEncounter.emit(encounter);
+		} else {
+			this.encounter.name = model.EncounterName;
+			this.onSaveEncounter.emit(this.encounter);
+		}
 	}
 
 	saveChanges() {
@@ -88,7 +99,6 @@ export class SpecsComponent implements OnChanges {
 				this.combatantForm.get('Player').setValue(this.combatant.player);
 			}
 		} else if (this.encounter) {
-			console.log(this.encounter);
 			this.encounterForm.get('EncounterName').setValue(this.encounter.name);
 		}
 	}

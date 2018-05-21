@@ -12,6 +12,7 @@ export class InitiativeTableComponent implements OnChanges {
 	@Input() combatants;
 	@Input() updatedPlayer: Hero;
 	@Input() encountersList;
+	@Input() encounterId: string;
 	@Output() onStartEncounter: EventEmitter<any> = new EventEmitter<any>();
 	@Output() onSaveEncounter: EventEmitter<Hero[]> = new EventEmitter<Hero[]>();
 
@@ -36,7 +37,11 @@ export class InitiativeTableComponent implements OnChanges {
 	}
 
 	startEncounter() {
-		this.onStartEncounter.emit(this.combatants);
+		if (this.encounterId) {
+			this.onStartEncounter.emit(this.encounterId);
+		} else {
+			this.onStartEncounter.emit(this.combatants);
+		}
 	}
 
 	saveEncounter() {

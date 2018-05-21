@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/map';
@@ -9,6 +9,7 @@ import { BaseRestApiService } from './base-rest.api.service';
 import { RequestError } from '../models/request-error';
 import { RequestResult } from '../models/request-result';
 import { RequestResultType } from '../enums/request-result-type';
+import { Combatant } from '../models/combatant';
 
 @Injectable()
 export class CombatantApiService extends BaseRestApiService {
@@ -18,6 +19,19 @@ export class CombatantApiService extends BaseRestApiService {
 		http: HttpClient
 	) {
 		super(http);
+	}
+
+	createNewCombatants(combatant: Combatant): Observable<any | RequestError> {
+		const headers: HttpHeaders = new HttpHeaders();
+		headers.append('Content-Type', 'application/x-www-form-urlencoded');
+		return this.post(`${this.combatantUrl}/combatant/create`, combatant, headers)
+			.map((result: RequestResult<any | RequestError>) => {
+				if (result.requestResultType === RequestResultType.Data) {
+					return new RequestResult(result.requestResultType, result.data);
+				} else {
+					return result.data as RequestResult<RequestError>;
+				}
+			});
 	}
 
 	getCombatant(id: string): Observable<any | RequestError> {

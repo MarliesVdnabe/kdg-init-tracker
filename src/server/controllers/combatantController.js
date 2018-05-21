@@ -22,17 +22,13 @@ exports.combatants_detail = function (req, res) {
 	});
 }
 
+
 // Handle Combatant create on POST.
 exports.combatants_create_post = function (req, res) {
 	const combatant = new Combatant();
-	combatant.oid = req.body.oid;
-	// combatant.name = req.body.name;
-	// combatant.player = req.body.player;
+	combatant.combatant = req.body.combatant;
 	combatant.type = req.body.type;
-	// combatant.hitPoints = req.body.hitPoints;
 	combatant.currentHitPoints = req.body.currentHitPoints;
-	// combatant.armorClass = req.body.armorClass;
-	// combatant.initModifier = req.body.initModifier;
 	combatant.initiative = req.body.initiative;
 	combatant.played = req.body.played;
 
@@ -40,10 +36,11 @@ exports.combatants_create_post = function (req, res) {
 		if (err) {
 			res.send(err);
 		} else {
-			res.json({ message: 'Combatant Created' });
+			res.json(combatant);
 		}
 	});
 }
+
 
 // DELETE Combatant.
 exports.combatants_delete_delete = function (req, res) {
