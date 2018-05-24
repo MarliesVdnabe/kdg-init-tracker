@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { Hero } from '../../../../api/models/hero';
-import { Combatant } from '../../../../api/models/combatant';
+import { Encounter } from '../../../../api/models/encounter';
+import { EncounterMonster, Monster } from '../../../../api/models/monster';
+import { EncounterHero, Hero } from '../../../../api/models/hero';
 
 @Component({
 	selector: 'app-initiative-table',
@@ -9,42 +10,56 @@ import { Combatant } from '../../../../api/models/combatant';
 })
 
 export class InitiativeTableComponent implements OnChanges {
-	@Input() combatants;
-	@Input() updatedPlayer: Hero;
-	@Input() encountersList;
-	@Input() encounterId: string;
-	@Output() onStartEncounter: EventEmitter<any> = new EventEmitter<any>();
-	@Output() onSaveEncounter: EventEmitter<Hero[]> = new EventEmitter<Hero[]>();
+	@Input() encounterItems;
+	@Input() updatedItem: Hero | Encounter | Monster;
+	@Output() onRemoveItem: EventEmitter<null> = new EventEmitter();
+	@Output() onStartEncounter: EventEmitter<null> = new EventEmitter();
+	@Output() onSaveEncounter: EventEmitter<null> = new EventEmitter();
 
 	constructor() { }
 
+	ngOninit() { }
+
 	ngOnChanges(changes: SimpleChanges) {
-		if (!this.updatedPlayer) {
+		if (!this.updatedItem) {
 			return;
 		}
-		const filter = this.combatants.filter(x => x.player._id === this.updatedPlayer._id);
+		const filter = this.encounterItems.filter(x => x.originalItem._id === this.updatedItem._id);
 		for (let i = 0; i < filter.length; i++) {
-			const index = this.combatants.indexOf(filter[i]);
-			const newPlayer = i === 0 ? { player: this.updatedPlayer, tempId: null } : { player: this.updatedPlayer, tempId: i };
-			this.combatants.splice(index, 1, newPlayer);
+			const index = this.encounterItems.indexOf(filter[i]);
+			if (this.updatedItem instanceof Monster) {
+				const newPlayer: EncounterMonster = {
+					originalItem: this.updatedItem,
+					currentHitPoints: this.updatedItem.hitPoints,
+					currentArmorClass: this.updatedItem.armorClass,
+					played: false,
+					initiative: null,
+					visible: true
+				};
+				this.encounterItems.splice(index, 1, newPlayer);
+			} else if (this.updatedItem instanceof Hero) {
+				const newPlayer: EncounterHero = {
+					originalItem: this.updatedItem,
+					currentHitPoints: this.updatedItem.hitPoints,
+					currentArmorClass: this.updatedItem.armorClass,
+					played: false,
+					initiative: null,
+				};
+				this.encounterItems.splice(index, 1, newPlayer);
+			}
 		}
 	}
 
-	removeCombatant(name, tempId) {
-		const item = this.combatants.find(x => x.player.name === name && x.tempId === tempId);
-		const index = this.combatants.indexOf(item);
-		this.combatants.splice(index, 1);
+	removeItem(index) {
+		this.encounterItems.splice(index, 1);
+		this.onRemoveItem.emit();
 	}
 
 	startEncounter() {
-		if (this.encounterId) {
-			this.onStartEncounter.emit(this.encounterId);
-		} else {
-			this.onStartEncounter.emit(this.combatants);
-		}
+		this.onStartEncounter.emit();
 	}
 
 	saveEncounter() {
-		this.onSaveEncounter.emit(this.combatants);
+		this.onSaveEncounter.emit();
 	}
 }

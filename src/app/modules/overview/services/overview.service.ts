@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { RequestError } from '../../../api/models/request-error';
-import { PlayerType } from '../../../api/enums/player-type';
+import { CreatureTypeEnum } from '../../../api/enums/creature-type';
 import { Hero } from '../../../api/models/hero';
 
 import { HeroDomainService } from '../../../api/domain-services/hero.domain.service';
 import { MonsterDomainService } from '../../../api/domain-services/monster.domain.service';
 import { EncounterDomainService } from '../../../api/domain-services/encounter.domain.service';
 import { CombatantDomainService } from '../../../api/domain-services/combatant.domain.service';
-import { Combatant } from '../../../api/models/combatant';
 import { Encounter } from '../../../api/models/encounter';
+import { Monster } from '../../../api/models/monster';
 
 @Injectable()
 export class OverviewService {
-	playerType = PlayerType;
+	creaturetypeEnum = CreatureTypeEnum;
+
 	constructor(
 		private _heroService: HeroDomainService,
 		private _monsterService: MonsterDomainService,
@@ -22,37 +23,53 @@ export class OverviewService {
 	) { }
 
 	/* GENERAL */
-	createNewPlayer(player: Hero) {
-		if (player.type === this.playerType.Monster) {
-			return this.createNewMonster(player);
-		} else {
-			return this.createNewHero(player);
+
+	createItem(item) {
+		if (item instanceof Monster) {
+			return this.createNewMonster(item);
+		} else if (item instanceof Hero) {
+			return this.createNewHero(item);
+		} else if (item instanceof Encounter) {
+			console.log(item);
+			return this.createNewEncounter(item);
 		}
 	}
 
-	getAllMonstersOrHeroes(monsterOrHero: number) {
-		if (monsterOrHero === this.playerType.Monster) {
+	getAllListItems(monsterHeroOrEncounter: number) {
+		if (monsterHeroOrEncounter === this.creaturetypeEnum.Monster) {
 			return this.getAllMonsters();
-		} else {
+		} else if (monsterHeroOrEncounter === this.creaturetypeEnum.Hero) {
 			return this.getAllHeroes();
+		} else {
+			return this.getAllEncounters();
 		}
 	}
 
 	getMonsterOrHero(player: Hero) {
-		if (player.type === this.playerType.Monster) {
+		if (player.creatureType === this.creaturetypeEnum.Monster) {
 			return this.getMonster(player._id);
 		} else {
-			return this.getHero(player._id);
+			return this.getHeroById(player._id);
 		}
 	}
 
-	updateMonsterOrHero(player: Hero) {
-		if (player.type === this.playerType.Monster) {
-			return this.updateMonster(player);
+	saveItem(item: Hero | Monster | Encounter) {
+		if (item instanceof Hero) {
+			return this.updateHero(item);
+		} else if (item instanceof Monster) {
+			return this.updateMonster(item);
 		} else {
-			return this.updateHero(player);
+			return this.updateEncounter(item);
 		}
 	}
+
+	// updateMonsterOrHero(player: Hero) {
+	// 	if (player.creatureType === this.creaturetypeEnum.Monster) {
+	// 		return this.updateMonster(player);
+	// 	} else {
+	// 		return this.updateHero(player);
+	// 	}
+	// }
 
 	// * HEROES * //
 	createNewHero(hero: Hero): Observable<any | RequestError> {
@@ -63,7 +80,7 @@ export class OverviewService {
 		return this._heroService.getAllHeroes();
 	}
 
-	getHero(id: string): Observable<any | RequestError> {
+	getHeroById(id: string): Observable<any | RequestError> {
 		return this._heroService.getHero(id);
 	}
 
@@ -72,7 +89,7 @@ export class OverviewService {
 	}
 
 	// * Monsters * //
-	createNewMonster(monster: Hero): Observable<any | RequestError> {
+	createNewMonster(monster: Monster): Observable<any | RequestError> {
 		return this._monsterService.createNewMonster(monster);
 	}
 
@@ -84,7 +101,7 @@ export class OverviewService {
 		return this._monsterService.getMonster(id);
 	}
 
-	updateMonster(monster: Hero): Observable<any | RequestError> {
+	updateMonster(monster: Monster): Observable<any | RequestError> {
 		return this._monsterService.updateMonster(monster);
 	}
 
@@ -102,12 +119,7 @@ export class OverviewService {
 		return this._encounterService.saveEncounter(encounter);
 	}
 
-	/* COMBATANTS */
-	createNewCombatants(combatant: Combatant): Observable<any | RequestError> {
-		return this._combatantService.createNewCombatants(combatant);
-	}
-
-	getCombatant(id: string): Observable<any | RequestError> {
-		return this._combatantService.getCombatant(id);
+	updateEncounter(encounter: Encounter): Observable<any | RequestError> {
+		return this._encounterService.updateEncounter(encounter);
 	}
 }

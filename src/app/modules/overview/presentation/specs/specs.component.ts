@@ -1,9 +1,9 @@
 import { Component, Input, Output, OnChanges, SimpleChanges, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Hero } from '../../../../api/models/hero';
-import { PlayerType } from '../../../../api/enums/player-type';
+import { CreatureTypeEnum } from '../../../../api/enums/creature-type';
 import { Encounter } from '../../../../api/models/encounter';
-import { Combatant } from '../../../../api/models/combatant';
+import { Monster } from '../../../../api/models/monster';
 
 @Component({
 	selector: 'app-specs',
@@ -12,24 +12,23 @@ import { Combatant } from '../../../../api/models/combatant';
 })
 
 export class SpecsComponent implements OnChanges {
-	@Input() combatant: Hero;
-	@Input() monsterOrHero: number;
-	@Input() encounter: Encounter;
-	@Input() combatantsList: Combatant[];
-	@Output() onSaveChanges: EventEmitter<Hero> = new EventEmitter<Hero>();
-	@Output() onSaveEncounter: EventEmitter<Encounter> = new EventEmitter<Encounter>();
+	formType: number;
+	@Input() startEnounter;
+	@Input() item: Hero | Monster | Encounter;
+	@Input() createItem: number;
+	@Output() onSaveItem: EventEmitter<Hero | Monster | Encounter> = new EventEmitter();
 	@Output() onCancelClicked: EventEmitter<null> = new EventEmitter();
 
-	combatantForm: FormGroup;
+	heroForm: FormGroup;
+	monsterForm: FormGroup;
 	encounterForm: FormGroup;
 
-	// Enums
-	playerType = PlayerType;
+	creatureTypeEnum = CreatureTypeEnum;
 
 	constructor(
 		private _fb: FormBuilder
 	) {
-		this.combatantForm = _fb.group({
+		this.heroForm = _fb.group({
 			'Name': ['', Validators.required],
 			'Player': [''],
 			'Hitpoints': ['', Validators.compose([Validators.required, Validators.min(0)])],
@@ -37,12 +36,26 @@ export class SpecsComponent implements OnChanges {
 			'Initiative': ['', Validators.compose([Validators.required, Validators.min(-1), Validators.max(10)])]
 		});
 
+		this.monsterForm = _fb.group({
+			'Name': ['', Validators.required],
+			'Hitpoints': ['', Validators.compose([Validators.required, Validators.min(0)])],
+			'Armorclass': ['', Validators.compose([Validators.required, Validators.min(0)])],
+			'Initiative': ['', Validators.compose([Validators.required, Validators.min(-1), Validators.max(10)])]
+		});
+
 		this.encounterForm = _fb.group({
-			'EncounterName': ['', Validators.required]
+			'Name': ['', Validators.required]
 		});
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
+		if (this.item instanceof Hero || this.createItem === this.creatureTypeEnum.Hero) {
+			this.formType = 1;
+		} else if (this.item instanceof Monster || this.createItem === this.creatureTypeEnum.Monster) {
+			this.formType = 0;
+		} else if (this.item instanceof Encounter || this.createItem === 2) {
+			this.formType = 2;
+		}
 		this.setFormData();
 	}
 
@@ -50,57 +63,86 @@ export class SpecsComponent implements OnChanges {
 		this.onCancelClicked.emit();
 	}
 
-	saveEncounter() {
-		const model = this.encounterForm.value;
-		const encounter = new Encounter();
-		if (this.combatantsList) {
-			encounter.name = model.EncounterName;
-			encounter.combatants = this.combatantsList;
-			this.onSaveEncounter.emit(encounter);
+	saveItem() {
+		if (this.item instanceof Monster) {
+			const model = this.monsterForm.value;
+			this.item.name = model.Name;
+			this.item.armorClass = model.Armorclass;
+			this.item.hitPoints = model.Hitpoints;
+			this.item.initModifier = model.Initiative;
+			this.onSaveItem.emit(this.item);
+		} else if (this.createItem === this.creatureTypeEnum.Monster) {
+			const model = this.monsterForm.value;
+			const newItem = new Monster({
+				name: model.Name,
+				armorClass: model.Armorclass,
+				hitPoints: model.Hitpoints,
+				initModifier: model.Initiative,
+				creatureType: 0
+			});
+			this.onSaveItem.emit(newItem);
+		} else if (this.item instanceof Hero) {
+			const model = this.heroForm.value;
+			this.item.name = model.Name;
+			this.item.player = model.Player;
+			this.item.armorClass = model.Armorclass;
+			this.item.hitPoints = model.Hitpoints;
+			this.item.initModifier = model.Initiative;
+			this.onSaveItem.emit(this.item);
+		} else if (this.createItem === this.creatureTypeEnum.Hero) {
+			const model = this.heroForm.value;
+			const newItem = new Hero({
+				name: model.Name,
+				player: model.Player,
+				armorClass: model.Armorclass,
+				hitPoints: model.Hitpoints,
+				initModifier: model.Initiative,
+				creatureType: 1
+			});
+			this.onSaveItem.emit(newItem);
+		} else if (this.item instanceof Encounter) {
+			const model = this.encounterForm.value;
+			this.item.name = model.Name;
+			this.onSaveItem.emit(this.item);
 		} else {
-			this.encounter.name = model.EncounterName;
-			this.onSaveEncounter.emit(this.encounter);
-		}
-	}
-
-	saveChanges() {
-		const model = this.combatantForm.value;
-		if (this.combatant) {
-			this.combatant.name = model.Name;
-			this.combatant.armorClass = model.Armorclass;
-			this.combatant.hitPoints = model.Hitpoints;
-			this.combatant.initModifier = model.Initiative;
-			this.combatant.type = this.monsterOrHero;
-			if (this.combatant.type === this.playerType.Hero) {
-				this.combatant.player = model.Player;
-			}
-			this.onSaveChanges.emit(this.combatant);
-		} else {
-			const newPlayer = new Hero();
-			newPlayer.name = model.Name;
-			newPlayer.armorClass = model.Armorclass;
-			newPlayer.hitPoints = model.Hitpoints;
-			newPlayer.initModifier = model.Initiative;
-			newPlayer.type = this.monsterOrHero;
-			if (this.monsterOrHero === this.playerType.Hero) {
-				newPlayer.player = model.Player;
-			}
-			this.onSaveChanges.emit(newPlayer);
+			const model = this.encounterForm.value;
+			const newItem = new Encounter({
+				name: model.Name,
+				heroes: [],
+				monsters: []
+			});
+			this.onSaveItem.emit(newItem);
 		}
 
 	}
 
 	setFormData() {
-		if (this.combatant) {
-			this.combatantForm.get('Name').setValue(this.combatant.name);
-			this.combatantForm.get('Hitpoints').setValue(this.combatant.hitPoints);
-			this.combatantForm.get('Armorclass').setValue(this.combatant.armorClass);
-			this.combatantForm.get('Initiative').setValue(this.combatant.initModifier);
-			if (this.combatant.type === this.playerType.Hero) {
-				this.combatantForm.get('Player').setValue(this.combatant.player);
-			}
-		} else if (this.encounter) {
-			this.encounterForm.get('EncounterName').setValue(this.encounter.name);
+		if (this.item instanceof Monster && this.item !== null) {
+			this.monsterForm.get('Name').setValue(this.item.name);
+			this.monsterForm.get('Hitpoints').setValue(this.item.hitPoints);
+			this.monsterForm.get('Armorclass').setValue(this.item.armorClass);
+			this.monsterForm.get('Initiative').setValue(this.item.initModifier);
+		} else if (this.createItem === this.creatureTypeEnum.Monster) {
+			this.monsterForm.get('Name').reset();
+			this.monsterForm.get('Hitpoints').reset();
+			this.monsterForm.get('Armorclass').reset();
+			this.monsterForm.get('Initiative').reset();
+		} else if (this.item instanceof Hero) {
+			this.heroForm.get('Name').setValue(this.item.name);
+			this.heroForm.get('Player').setValue(this.item.player);
+			this.heroForm.get('Hitpoints').setValue(this.item.hitPoints);
+			this.heroForm.get('Armorclass').setValue(this.item.armorClass);
+			this.heroForm.get('Initiative').setValue(this.item.initModifier);
+		} else if (this.createItem === this.creatureTypeEnum.Hero) {
+			this.heroForm.get('Name').reset();
+			this.heroForm.get('Player').reset();
+			this.heroForm.get('Hitpoints').reset();
+			this.heroForm.get('Armorclass').reset();
+			this.heroForm.get('Initiative').reset();
+		} else if (this.item instanceof Encounter) {
+			this.encounterForm.get('Name').setValue(this.item.name);
+		} else if (this.createItem === 2) {
+			this.encounterForm.get('Name').reset();
 		}
 	}
 }

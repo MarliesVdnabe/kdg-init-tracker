@@ -1,9 +1,8 @@
 import { CreatureTypeEnum } from '../enums/creature-type';
 
-export class Hero {
+export class Monster {
 	_id?: string;
 	name: string;
-	player: string;
 	creatureType: CreatureTypeEnum;
 	hitPoints: number;
 	armorClass: number;
@@ -13,7 +12,6 @@ export class Hero {
 		if (json) {
 			this._id = json._id;
 			this.name = json.name;
-			this.player = json.player;
 			this.creatureType = json.creatureType;
 			this.hitPoints = json.hitPoints;
 			this.armorClass = json.armorClass;
@@ -22,22 +20,24 @@ export class Hero {
 	}
 }
 
-export class EncounterHero {
+export class EncounterMonster {
 	_id?: string;
-	originalItem: Hero;
+	originalItem: Monster;
 	currentHitPoints: number;
 	currentArmorClass: number;
 	played: boolean;
 	initiative: number;
+	visible: boolean;
 
 	constructor(json?: any) {
 		if (json) {
 			this._id = json._id;
-			this.originalItem = json.originalHero;
-			this.currentHitPoints = json.currentHitPoints;
+			this.originalItem = json.originalMonster;
+			this.currentHitPoints = json.currentHitpoints;
 			this.currentArmorClass = json.currentArmorClass;
 			this.played = json.played;
 			this.initiative = json.initiative;
+			this.visible = json.visible;
 		}
 	}
 }

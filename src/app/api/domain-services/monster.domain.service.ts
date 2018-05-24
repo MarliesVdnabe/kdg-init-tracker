@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { MonsterApiService } from '../api-services/monster.api.service';
 import { Observable } from 'rxjs/Observable';
 import { RequestError } from '../models/request-error';
-import { Hero } from '../models/hero';
+import { MonsterApiService } from '../api-services/monster.api.service';
+import { Monster } from '../models/monster';
 
 @Injectable()
 export class MonsterDomainService {
@@ -10,7 +10,7 @@ export class MonsterDomainService {
 		private _monsterApiService: MonsterApiService
 	) { }
 
-	createNewMonster(monster: Hero): Observable<any | RequestError> {
+	createNewMonster(monster: Monster): Observable<any | RequestError> {
 		return this._monsterApiService.createNewMonster(monster);
 	}
 
@@ -22,7 +22,7 @@ export class MonsterDomainService {
 		return this._monsterApiService.getMonster(id);
 	}
 
-	updateMonster(monster: Hero): Observable<any | RequestError> {
+	updateMonster(monster: Monster): Observable<any | RequestError> {
 		return this._monsterApiService.updateMonster(monster);
 	}
 }

@@ -6,7 +6,7 @@ exports.monsters_list = function (req, res) {
 		if (err) {
 			res.send(err);
 		} else {
-			res.json(monsters);
+			res.status(200).json(monsters);
 		}
 	});
 };
@@ -17,7 +17,7 @@ exports.monsters_detail = function (req, res) {
 		if (err) {
 			res.send(err);
 		} else {
-			res.json(monster)
+			res.status(200).json(monster)
 		}
 	});
 };
@@ -26,7 +26,7 @@ exports.monsters_detail = function (req, res) {
 exports.monster_create_post = function (req, res) {
 	const monster = new Monster();
 	monster.name = req.body.name;
-	monster.type = req.body.type;
+	monster.creatureType = req.body.creatureType;
 	monster.hitPoints = req.body.hitPoints;
 	monster.armorClass = req.body.armorClass;
 	monster.initModifier = req.body.initModifier;
@@ -35,7 +35,7 @@ exports.monster_create_post = function (req, res) {
 		if (err) {
 			res.status(400).send(err);
 		} else {
-			res.json(monster);
+			res.status(200).json(monster);
 		}
 	})
 };
@@ -46,7 +46,7 @@ exports.monster_delete_delete = function (req, res) {
 		if (err) {
 			res.send(err);
 		} else {
-			res.json({ message: 'Monster succesfully deleted' });
+			res.status(200).json({ message: 'Monster succesfully deleted' });
 		}
 	});
 }
@@ -58,7 +58,7 @@ exports.monster_update_put = function (req, res) {
 			res.send(err);
 		} else {
 			monster.name = req.body.name;
-			monster.type = req.body.type;
+			monster.creatureType = req.body.creatureType;
 			monster.hitPoints = req.body.hitPoints;
 			monster.armorClass = req.body.armorClass;
 			monster.initModifier = req.body.initModifier;
@@ -67,7 +67,7 @@ exports.monster_update_put = function (req, res) {
 				if (err) {
 					res.send(err);
 				} else {
-					res.json(monster);
+					res.status(200).json(monster);
 				}
 			});
 		}

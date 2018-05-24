@@ -13,7 +13,7 @@ import { BaseRestApiService } from './base-rest.api.service';
 
 @Injectable()
 export class HeroApiService extends BaseRestApiService {
-	private heroUrl: string = environment.apiUrl;
+	private backendUrl: string = environment.apiUrl;
 
 	constructor(
 		http: HttpClient
@@ -22,12 +22,10 @@ export class HeroApiService extends BaseRestApiService {
 	}
 
 	createNewHero(hero: Hero): Observable<any | RequestError> {
-		const headers: HttpHeaders = new HttpHeaders();
-		headers.append('Content-Type', 'application/x-www-form-urlencoded');
-		return this.post(`${this.heroUrl}/hero/create`, hero, headers)
+		return this.post(`${this.backendUrl}/hero/create`, hero)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
-					return new RequestResult(result.requestResultType, result.data);
+					return new RequestResult(result.requestResultType, new Hero(result.data));
 				} else {
 					return result.data as RequestResult<RequestError>;
 				}
@@ -35,10 +33,10 @@ export class HeroApiService extends BaseRestApiService {
 	}
 
 	getAllHeroes(): Observable<any | RequestError> {
-		return this.get(`${this.heroUrl}/heroes`)
+		return this.get(`${this.backendUrl}/heroes`)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
-					return new RequestResult(result.requestResultType, result.data);
+					return new RequestResult(result.requestResultType, (result.data as Hero[]).map((hero: any) => new Hero(hero)));
 				} else {
 					return result.data as RequestResult<RequestError>;
 				}
@@ -46,10 +44,10 @@ export class HeroApiService extends BaseRestApiService {
 	}
 
 	getHero(id: string): Observable<any | RequestError> {
-		return this.get(`${this.heroUrl}/hero/${id}`)
+		return this.get(`${this.backendUrl}/hero/${id}`)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
-					return new RequestResult(result.requestResultType, result.data);
+					return new RequestResult(result.requestResultType, new Hero(result.data));
 				} else {
 					return result.data as RequestResult<RequestError>;
 				}
@@ -57,12 +55,10 @@ export class HeroApiService extends BaseRestApiService {
 	}
 
 	updateHero(hero: Hero): Observable<any | RequestError> {
-		const headers: HttpHeaders = new HttpHeaders();
-		headers.append('Content-Type', 'application/x-www-form-urlencoded');
-		return this.post(`${this.heroUrl}/hero/${hero._id}/update`, hero, headers)
+		return this.post(`${this.backendUrl}/hero/${hero._id}/update`, hero)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
-					return new RequestResult(result.requestResultType, result.data);
+					return new RequestResult(result.requestResultType, new Hero(result.data));
 				} else {
 					return result.data as RequestResult<RequestError>;
 				}

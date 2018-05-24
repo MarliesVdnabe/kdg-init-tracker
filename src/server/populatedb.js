@@ -2,39 +2,44 @@
 console.log('This script populates the data base with some dummy data');
 
 // Get arguments passed on command line
-var userArgs = process.argv.slice(2);
+const userArgs = process.argv.slice(2);
 const args = userArgs[0].trim();
 // if (!args.startsWith('mongodb')) {
 // 	console.log('ERROR: You need to specify a valid mongodb URL as the first argument');
 // 	return
 // }
 
-var async = require('async');
-var Hero = require('./models/heroes');
-var Monster = require('./models/monsters');
-var Combatant = require('./models/combatant');
-var Encounter = require('./models/encounters');
+const async = require('async');
+const Hero = require('./models/heroes');
+const Monster = require('./models/monsters');
+const Encounter = require('./models/encounters').Encounter;
 
-var mongoose = require('mongoose');
-var mongoDB = 'mongodb://initTrackerAdmin:Passw0rd@ds119070.mlab.com:19070/init_tracker';
+const mongoose = require('mongoose');
+const mongoDB = 'mongodb://initTrackerAdmin:Passw0rd@ds119070.mlab.com:19070/init_tracker';
 mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
-var db = mongoose.connection;
+const db = mongoose.connection;
 mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-var heroes = []
-var monsters = []
-var encounters = []
-var combatants = []
+const heroes = []
+const monsters = []
+const encounters = []
 
-function heroCreate(name, player, type, hitPoints, armorClass, initModifier, callback) {
-	hero_detail = { name: name, type: type, hitPoints: hitPoints, armorClass: armorClass, initModifier: initModifier }
+function heroCreate(name, player, creatureType, hitPoints, armorClass, initModifier, callback) {
+	let hero_detail = {
+		name: name,
+		creatureType: creatureType,
+		hitPoints: hitPoints,
+		armorClass: armorClass,
+		initModifier: initModifier
+	};
+
 	if (player != false) {
 		hero_detail.player = player;
 	} else {
 		hero_detail.player = null;
 	}
-	var hero = new Hero(hero_detail);
+	const hero = new Hero(hero_detail);
 	hero.save(function (err) {
 		if (err) {
 			callback(err, null)
@@ -46,9 +51,16 @@ function heroCreate(name, player, type, hitPoints, armorClass, initModifier, cal
 	});
 }
 
-function monsterCreate(name, type, hitPoints, armorClass, initModifier, callback) {
-	monster_detail = { name: name, type: type, hitPoints: hitPoints, armorClass: armorClass, initModifier: initModifier }
-	var monster = new Monster(monster_detail);
+function monsterCreate(name, creatureType, hitPoints, armorClass, initModifier, callback) {
+	let monster_detail = {
+		name: name,
+		creatureType: creatureType,
+		hitPoints: hitPoints,
+		armorClass: armorClass,
+		initModifier: initModifier
+	};
+
+	const monster = new Monster(monster_detail);
 	monster.save(function (err) {
 		if (err) {
 			callback(err, null)
@@ -60,23 +72,16 @@ function monsterCreate(name, type, hitPoints, armorClass, initModifier, callback
 	});
 }
 
-function combatantCreate(combatant, type, currentHitPoints, initiative, played, callback) {
-	combatant_detail = { combatant: combatant, type: type, currentHitPoints: currentHitPoints, initiative: initiative, played: played }
-	var combatant = new Combatant(combatant_detail);
-	combatant.save(function (err) {
-		if (err) {
-			callback(err, null)
-			return
-		}
-		console.log('New Combatant: ' + combatant);
-		combatants.push(combatant)
-		callback(null, combatant)
-	})
-}
+function encounterCreate(name, heroes, monsters, callback) {
+	let encounter_detail = {
+		name: name,
+		heroes: heroes,
+		monsters: monsters
+	};
+	console.log(encounter_detail);
 
-function encounterCreate(name, combatants, callback) {
-	encounter_detail = { name: name, combatants: combatants }
-	var encounter = new Encounter(encounter_detail);
+	const encounter = new Encounter(encounter_detail);
+	console.log(encounter);
 	encounter.save(function (err) {
 		if (err) {
 			callback(err, null)
@@ -141,24 +146,15 @@ function createHeroes(callback) {
 		callback);
 }
 
-function createCombatants(callback) {
-	async.parallel([
-		function (callback) {
-			combatantCreate(heroes[0], 1, 9, 4, false, callback);
-		},
-		function (callback) {
-			combatantCreate(heroes[3], 1, 12, 8, false, callback);
-		},
-		function (callback) {
-			combatantCreate(monsters[0], 0, 64, 3, false, callback);
-		},
-	], callback);
-}
-
 function createEncouters(callback) {
 	async.parallel([
 		function (callback) {
-			encounterCreate('The Kingkiller Chronicle', [combatants[0], combatants[1], combatants[2]], callback);
+			encounterCreate('The Kingkiller Chronicle', [
+				{ originalHero: heroes[0], currentHitPoints: 9, currentArmorClass: 18, played: false, initiative: 5 },
+				{ originalHero: heroes[1], currentHitPoints: 9, currentArmorClass: 14, played: false, initiative: 6 }
+			], [
+					{ originalMonster: monsters[3], currentHitPoints: 23, currentArmorClass: 15, played: true, initiative: 8, visible: true }
+				], callback);
 		}
 	],
 		// optional callback
@@ -168,7 +164,6 @@ function createEncouters(callback) {
 async.series([
 	createMonsters,
 	createHeroes,
-	createCombatants,
 	createEncouters
 ],
 	// Optional callback

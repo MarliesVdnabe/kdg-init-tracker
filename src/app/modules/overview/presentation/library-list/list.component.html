@@ -1,18 +1,18 @@
-<ul *ngIf="players">
-	<li class="hero" *ngFor="let player of players">
-		<span (click)="selectItem(player)">{{player.name}}</span>
-		<span (click)="editItem(player)">
+<ul *ngIf="items">
+	<li class="hero" *ngFor="let item of items">
+		<span (click)="selectItem(item)">{{item.name}}</span>
+		<span (click)="editItem(item)">
 			<img src="../../../../../assets/images/pencil_edit.png" alt="Edit">
 		</span>
 	</li>
 </ul>
-<button *ngIf="players" class="button" (click)="addNewplayer(players[0].type)">Add new {{playerType[players[0].type]}}</button>
+<button *ngIf="lastListClicked === 0 || lastListClicked === 1" class="button" (click)="addNewItem(lastListClicked)">Add new {{creatureTypeEnum[lastListClicked]}}</button>
 
-<ul *ngIf="!players">
+<!-- <ul *ngIf="!players">
 	<li class="hero" *ngFor="let encounter of filteredEncounters">
 		<span (click)="selectItem(encounter)">{{encounter.name}}</span>
 		<span (click)="editItem(encounter)">
 			<img src="../../../../../assets/images/pencil_edit.png" alt="Edit">
 		</span>
 	</li>
-</ul>
+</ul> -->

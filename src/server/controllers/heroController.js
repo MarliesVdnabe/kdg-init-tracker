@@ -27,7 +27,7 @@ exports.heroes_create_post = function (req, res) {
 	const hero = new Hero();
 	hero.name = req.body.name;
 	hero.player = req.body.player;
-	hero.type = req.body.type;
+	hero.creatureType = req.body.creatureType;
 	hero.hitPoints = req.body.hitPoints;
 	hero.armorClass = req.body.armorClass;
 	hero.initModifier = req.body.initModifier;
@@ -36,7 +36,7 @@ exports.heroes_create_post = function (req, res) {
 		if (err) {
 			res.send(err);
 		} else {
-			res.json(hero);
+			res.status(200).json(hero);
 		}
 	});
 }
@@ -47,7 +47,7 @@ exports.heroes_delete_delete = function (req, res) {
 		if (err) {
 			res.send(err);
 		} else {
-			res.json({ message: 'Hero succesfully deleted' });
+			res.status(200).json({ message: 'Hero succesfully deleted' });
 		}
 	});
 }
@@ -60,7 +60,7 @@ exports.heroes_update_put = function (req, res) {
 		} else {
 			hero.name = req.body.name;
 			hero.player = req.body.player;
-			hero.type = req.body.type;
+			hero.creatureType = req.body.creatureType;
 			hero.hitPoints = req.body.hitPoints;
 			hero.armorClass = req.body.armorClass;
 			hero.initModifier = req.body.initModifier;
@@ -69,7 +69,7 @@ exports.heroes_update_put = function (req, res) {
 				if (err) {
 					res.send(err);
 				} else {
-					res.json(hero);
+					res.status(200).json(hero);
 				}
 			});
 		}

@@ -1,7 +1,8 @@
 import { Component, EventEmitter, OnInit, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { Hero } from '../../../../api/models/hero';
-import { PlayerType } from '../../../../api/enums/player-type';
+import { CreatureTypeEnum } from '../../../../api/enums/creature-type';
 import { Encounter } from '../../../../api/models/encounter';
+import { Monster } from '../../../../api/models/monster';
 
 @Component({
 	selector: 'app-list',
@@ -10,26 +11,23 @@ import { Encounter } from '../../../../api/models/encounter';
 })
 
 export class ListComponent implements OnChanges {
-	playerType = PlayerType;
+	creatureTypeEnum = CreatureTypeEnum;
 	filteredEncounters: Encounter[];
 
-	@Input() players: Hero[];
-	@Input() encounters: Encounter[];
-	@Output() onItemClicked: EventEmitter<Hero | Encounter> = new EventEmitter<Hero | Encounter>();
+	@Input() lastListClicked: number;
+	@Input() items: Monster[] | Hero[] | Encounter[];
+	@Output() onItemClicked: EventEmitter<Hero | Monster | Encounter> = new EventEmitter();
 	@Output() onEditItemClicked: EventEmitter<Hero | Encounter> = new EventEmitter<Hero | Encounter>();
-	@Output() onAddPlayerClicked: EventEmitter<number> = new EventEmitter<number>();
+	@Output() onCreateNewClicked: EventEmitter<number> = new EventEmitter<number>();
 
 	constructor() { }
 
 	ngOnChanges(changes: SimpleChanges) {
-		this.sortList(this.players);
-		if (this.encounters) {
-			this.filteredEncounters = this.encounters.filter(x => (x.name !== null));
-		}
+		this.sortList(this.items);
 	}
 
-	addNewplayer(monsterOrHero) {
-		this.onAddPlayerClicked.emit(monsterOrHero);
+	addNewItem(monsterOrHero) {
+		this.onCreateNewClicked.emit(monsterOrHero);
 	}
 
 	editItem(item) {
@@ -41,7 +39,7 @@ export class ListComponent implements OnChanges {
 	}
 
 	/* SORT LIST ALPHABETICAL */
-	sortList(list: Hero[]) {
+	sortList(list: any[]) {
 		if (!list) {
 			return;
 		}
@@ -49,7 +47,7 @@ export class ListComponent implements OnChanges {
 	}
 
 	private sortListAsc() {
-		return (a: Hero, b: Hero) => {
+		return (a: any, b: any) => {
 			if (a.name.toUpperCase().trim() < b.name.toUpperCase().trim()) {
 				return -1;
 			} else if (a.name.toUpperCase().trim() > b.name.toUpperCase().trim()) {

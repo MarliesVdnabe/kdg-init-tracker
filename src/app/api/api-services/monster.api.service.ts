@@ -7,11 +7,11 @@ import { BaseRestApiService } from './base-rest.api.service';
 import { RequestError } from '../models/request-error';
 import { RequestResult } from '../models/request-result';
 import { RequestResultType } from '../enums/request-result-type';
-import { Hero } from '../models/hero';
+import { Monster } from '../models/monster';
 
 @Injectable()
 export class MonsterApiService extends BaseRestApiService {
-	private monsterUrl: string = environment.apiUrl;
+	private backendUrl: string = environment.apiUrl;
 
 	constructor(
 		http: HttpClient
@@ -20,12 +20,10 @@ export class MonsterApiService extends BaseRestApiService {
 	}
 
 	createNewMonster(monster): Observable<any | RequestError> {
-		const headers: HttpHeaders = new HttpHeaders();
-		headers.append('Content-Type', 'application/x-www-form-urlencoded');
-		return this.post(`${this.monsterUrl}/monster/create`, monster, headers)
+		return this.post(`${this.backendUrl}/monster/create`, monster)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
-					return new RequestResult(result.requestResultType, result.data);
+					return new RequestResult(result.requestResultType, new Monster(result.data));
 				} else {
 					return result.data as RequestResult<RequestError>;
 				}
@@ -33,10 +31,10 @@ export class MonsterApiService extends BaseRestApiService {
 	}
 
 	getAllMonsters(): Observable<any | RequestError> {
-		return this.get(`${this.monsterUrl}/monsters/`)
+		return this.get(`${this.backendUrl}/monsters/`)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
-					return new RequestResult(result.requestResultType, result.data);
+					return new RequestResult(result.requestResultType, (result.data as Monster[]).map((monster: any) => new Monster(monster)));
 				} else {
 					return result.data as RequestResult<RequestError>;
 				}
@@ -44,23 +42,21 @@ export class MonsterApiService extends BaseRestApiService {
 	}
 
 	getMonster(id: string): Observable<any | RequestError> {
-		return this.get(`${this.monsterUrl}/monster/${id}`)
+		return this.get(`${this.backendUrl}/monster/${id}`)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
-					return new RequestResult(result.requestResultType, result.data);
+					return new RequestResult(result.requestResultType, result.data as Monster);
 				} else {
 					return result.data as RequestResult<RequestError>;
 				}
 			});
 	}
 
-	updateMonster(monster: Hero): Observable<any | RequestError> {
-		const headers: HttpHeaders = new HttpHeaders();
-		headers.append('Content-Type', 'application/x-www-form-urlencoded');
-		return this.post(`${this.monsterUrl}/monster/${monster._id}/update`, monster, headers)
+	updateMonster(monster: Monster): Observable<any | RequestError> {
+		return this.post(`${this.backendUrl}/monster/${monster._id}/update`, monster)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
-					return new RequestResult(result.requestResultType, result.data);
+					return new RequestResult(result.requestResultType, new Monster(result.data));
 				} else {
 					return result.data as RequestResult<RequestError>;
 				}

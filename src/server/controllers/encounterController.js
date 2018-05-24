@@ -1,10 +1,10 @@
-var Encounter = require('../models/encounters');
+var Encounter = require('../models/encounters').Encounter;
 
 // display list of all encounters.
 exports.encounters_list = function (req, res) {
 	Encounter.find(function (err, encounters) {
 		if (err) {
-			res.send(err);
+			res.status(204).send(err);
 		} else {
 			res.status(200).json(encounters);
 		}
@@ -17,7 +17,7 @@ exports.encounters_detail = function (req, res) {
 		if (err) {
 			res.send(err);
 		} else {
-			res.json(encounter);
+			res.status(200).json(encounter);
 		}
 	});
 }
@@ -26,7 +26,8 @@ exports.encounters_detail = function (req, res) {
 exports.encounters_create_post = function (req, res) {
 	const encounter = new Encounter();
 	encounter.name = req.body.name;
-	encounter.combatants = req.body.combatants;
+	encounter.heroes = req.body.heroes;
+	encounter.monsters = req.body.monsters;
 
 	encounter.save(function (err) {
 		if (err) {
@@ -43,7 +44,7 @@ exports.encounters_delete_delete = function (req, res) {
 		if (err) {
 			res.send(err);
 		} else {
-			res.json({ message: 'Encounter succesfully deleted' });
+			res.status(200).json({ message: 'Encounter succesfully deleted' });
 		}
 	});
 }
@@ -55,13 +56,14 @@ exports.encounters_update_put = function (req, res) {
 			res.send(err);
 		} else {
 			encounter.name = req.body.name;
-			encounter.combatants = req.body.combatants;
+			encounter.heroes = req.body.heroes;
+			encounter.monsters = req.body.monsters;
 
 			encounter.save(function (err) {
 				if (err) {
 					res.send(err);
 				} else {
-					res.json(encounter);
+					res.status(200).json(encounter);
 				}
 			});
 		}

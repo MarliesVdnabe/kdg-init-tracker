@@ -3,11 +3,12 @@ import { OverviewService } from '../../services/overview.service';
 import { RequestResult } from '../../../../api/models/request-result';
 import { RequestError } from '../../../../api/models/request-error';
 import { RequestResultType } from '../../../../api/enums/request-result-type';
-import { Hero } from '../../../../api/models/hero';
-import { PlayerType } from '../../../../api/enums/player-type';
+import { Hero, EncounterHero } from '../../../../api/models/hero';
+import { CreatureTypeEnum } from '../../../../api/enums/creature-type';
 import { Encounter } from '../../../../api/models/encounter';
-import { Combatant } from '../../../../api/models/combatant';
 import { Router } from '@angular/router/';
+import { Monster, EncounterMonster } from '../../../../api/models/monster';
+import { start } from 'repl';
 
 @Component({
 	selector: 'app-overview',
@@ -16,28 +17,43 @@ import { Router } from '@angular/router/';
 })
 
 export class OverviewComponent implements OnInit {
-	players: Hero[];
+	items: Hero[] | Monster[] | Encounter[];
+	encounter = new Encounter({
+		heroes: [],
+		monsters: []
+	});
+	encounterItems = [];
+	item: Hero | Monster | Encounter;
+	updatedItem: Hero | Monster | Encounter = null;
+	createItem: number;
+
 	combatant: Hero;
 	combatants = [];
 	list: string;
 	lastListClicked: number;
-	updatedPlayer: Hero = null;
+	// updatedPlayer: Hero = null;
 	monsterOrHero: number;
-	encounter: Encounter;
+	// encounter: Encounter;
 	encounters: Encounter[];
 	combatantsList = [];
 	encounterId: string;
 	newEncounterId: string;
 
 	// Enums
-	playertype = PlayerType;
+	creaturetypeEnum = CreatureTypeEnum;
 
 	// STATE
+	showEncounter = false;
+	showCreateMonsterHeroOrEncounter = false;
+	listLoaded = false;
+	editLoaded = false;
+
+
 	monsterOrHeroloaded: Boolean = false;
 	encounterLoaded: Boolean = false;
 	enableCombatant: Boolean = false;
 	reload: Boolean = false;
-	createNewMonsterOrHero: Boolean = false;
+	createNew: Boolean = false;
 	createNewEncounter: Boolean = false;
 	enableEncounter: Boolean = false;
 
@@ -47,216 +63,129 @@ export class OverviewComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.showMonsterOrHeroesList(0);
+		this.showListItems(0);
 	}
 
-	addEncounterToInitiative(encounter) {
-		this.encounterId = encounter._id;
-		this.combatants = [];
-		let combatant;
-		for (let i = 0; i < encounter.combatants.length; i++) {
-			this._overviewService.getCombatant(encounter.combatants[i])
-				.subscribe((combatnt: RequestResult<any | RequestError>) => {
-					if (combatnt.requestResultType === RequestResultType.Data) {
-						const cmb = combatnt.data as Combatant;
-						if (cmb.type === this.playertype.Monster) {
-							this._overviewService.getMonster(cmb.combatant[0])
-								.subscribe((monstr: RequestResult<any | RequestError>) => {
-									if (monstr.requestResultType === RequestResultType.Data) {
-										const monster = monstr.data as Hero;
-										combatant = { player: monster, tempId: null };
-										this.combatants.push(combatant);
-									} else {
-										console.log(monstr.data as RequestError);
-									}
-								});
-						} else {
-							this._overviewService.getHero(cmb.combatant[0])
-								.subscribe((her: RequestResult<any | RequestError>) => {
-									if (her.requestResultType === RequestResultType.Data) {
-										const hero = her.data as Hero;
-										combatant = { player: hero, tempId: null };
-										this.combatants.push(combatant);
-									}
-								});
-						}
-					} else {
-						console.log(combatnt.data as RequestError);
-					}
-				});
-		}
-	}
-
-	addPlayerToInitiative(player) {
-		this.encounterId = undefined;
-		const combatant = { player: player, tempId: null };
-		// SEE IF COMBATANT IS ALREADY IN LIST AND ADD TEMPID
-		for (let i = 0; i < this.combatants.length; i++) {
-			if (this.combatants[i].player.name === combatant.player.name && !this.combatants[i].tempId) {
-				combatant.tempId = 2;
-			} else if (this.combatants[i].player.name === combatant.player.name && this.combatants[i].tempId) {
-				combatant.tempId = this.combatants[i].tempId + 1;
+	addItemToInitiative(item) {
+		this.showEncounter = true;
+		if (item instanceof Hero) {
+			const newHero: EncounterHero = {
+				originalItem: item,
+				currentHitPoints: item.hitPoints,
+				currentArmorClass: item.armorClass,
+				played: false,
+				initiative: 0
+			};
+			this.encounterItems.push(newHero);
+			this.encounter.heroes.push(newHero);
+		} else if (item instanceof Monster) {
+			const newMonster: EncounterMonster = {
+				originalItem: item,
+				currentHitPoints: item.hitPoints,
+				currentArmorClass: item.armorClass,
+				played: false,
+				initiative: 0,
+				visible: true
+			};
+			this.encounterItems.push(newMonster);
+			this.encounter.monsters.push(newMonster);
+		} else {
+			this.encounterItems = [];
+			for (let i = 0; i < item.heroes.length; i++) {
+				this.encounterItems.push(item.heroes[i]);
 			}
+			for (let j = 0; j < item.monsters.length; j++) {
+				this.encounterItems.push(item.monsters[j]);
+			}
+			this.encounter = item;
 		}
-		this.combatants.push(combatant);
 	}
 
 	cancel() {
-		this.createNewMonsterOrHero = false;
-		this.createNewEncounter = false;
-		this.enableCombatant = false;
-		this.enableEncounter = false;
+		this.editLoaded = false;
+		this.showCreateMonsterHeroOrEncounter = false;
 	}
 
-	createEncounter(encounter) {
-		this._overviewService.createNewEncounter(encounter)
-			.subscribe((enc: RequestResult<any | RequestError>) => {
-				if (enc.requestResultType === RequestResultType.Data) {
-					console.log(enc.data);
-					const data = enc.data;
-					this.newEncounterId = data._id;
-				} else {
-					console.log(enc.data as RequestError);
-				}
-			});
+	createNewItem(monsterOrHero) {
+		this.showCreateMonsterHeroOrEncounter = true;
+		this.createItem = monsterOrHero;
+		this.item = null;
 	}
 
-	createNewPlayer(monsterOrHero) {
-		console.log(monsterOrHero);
-		this.createNewMonsterOrHero = true;
-		this.enableCombatant = false;
-		this.enableEncounter = false;
-		this.createNewEncounter = false;
-		this.monsterOrHero = monsterOrHero;
+	editItem(item) {
+		this.editLoaded = true;
+		this.item = item;
+		this.createItem = null;
 	}
 
-	editPlayer(player) {
-		this._overviewService.updateMonsterOrHero(player)
-			.subscribe((updatedPlayer: RequestResult<any | RequestError>) => {
-				if (updatedPlayer.requestResultType === RequestResultType.Data) {
-					this.showMonsterOrHeroesList(this.lastListClicked);
-					this.updatedPlayer = updatedPlayer.data;
-					this.enableCombatant = false;
-				} else {
-					console.log(updatedPlayer.data as RequestError);
-				}
-			});
+	giveNewEncounterName() {
+		this.showCreateMonsterHeroOrEncounter = true;
+		this.createItem = 2;
 	}
 
-	saveCombatantsToEncounter(combatants) {
-		this.savePlayerToCombatant(combatants);
-		setTimeout(() => {
-			this.createNewEncounter = true;
-			this.createNewMonsterOrHero = false;
-			this.enableCombatant = false;
-			this.enableEncounter = false;
-		}, 200);
+	removeItem(itemList) {
+		const heroes = this.encounterItems.filter(x => x.originalItem instanceof Hero) as EncounterHero[];
+		const monsters = this.encounterItems.filter(y => y.originalItem instanceof Monster) as EncounterMonster[];
+		this.encounter.heroes = heroes;
+		this.encounter.monsters = monsters;
 	}
 
-	saveEncounter(encounter: Encounter) {
-		this._overviewService.saveEncounter(encounter)
-			.subscribe((savedEncounter: RequestResult<any | RequestError>) => {
-				if (savedEncounter.requestResultType === RequestResultType.Data) {
-					this.createNewEncounter = false;
-				} else {
-					console.log(savedEncounter.data as RequestError);
-				}
-			});
-	}
-
-	savePlayer(player: Hero) {
-		this._overviewService.createNewPlayer(player)
-			.subscribe((newPlayer: RequestResult<any | RequestError>) => {
-				if (newPlayer.requestResultType === RequestResultType.Data) {
-					this.showMonsterOrHeroesList(this.lastListClicked);
-				} else {
-					console.log(newPlayer.data as RequestError);
-				}
-			});
-	}
-
-	savePlayerToCombatant(combatants): void {
-		let combatnt;
-		for (let i = 0; i < combatants.length; i++) {
-			combatnt = {
-				combatant: combatants[i].player, type: combatants[i].player.type, initiative: 0, played: false,
-				currentHitPoints: combatants[i].player.hitPoints
-			};
-			this._overviewService.createNewCombatants(combatnt)
-				.subscribe(combatant => {
-					if (combatant.requestResultType === RequestResultType.Data) {
-						const data = combatant.data;
-						this.combatantsList.push(data._id);
-					} else {
-						console.log(combatant as RequestError);
+	saveOrCreateItem(item, startEncounter?: boolean) {
+		if (item._id) {
+			this._overviewService.saveItem(item)
+				.subscribe((updatdItem: RequestResult<any | RequestError>) => {
+					if (updatdItem.requestResultType === RequestResultType.Data) {
+						this.updatedItem = updatdItem.data as Hero | Encounter | Monster;
+						if (startEncounter) {
+							this._router.navigate(['/encounter', item._id]);
+						}
+						console.log('updated', this.updatedItem);
+					}
+				});
+		} else {
+			if (item instanceof Encounter) {
+				item.heroes = this.encounter.heroes;
+				item.monsters = this.encounter.monsters;
+			}
+			this._overviewService.createItem(item)
+				.subscribe((newItm: RequestResult<any | RequestError>) => {
+					if (newItm.requestResultType === RequestResultType.Data) {
+						const newItem = newItm.data;
+						this.showListItems(this.lastListClicked);
+						this.showCreateMonsterHeroOrEncounter = false;
+						if (startEncounter) {
+							this._router.navigate(['/encounter', newItem._id]);
+						}
 					}
 				});
 		}
 	}
 
-	showEncountersList() {
-		this._overviewService.getAllEncounters()
-			.subscribe((encounters: RequestResult<any | RequestError>) => {
-				if (encounters.requestResultType === RequestResultType.Data) {
-					this.encounters = encounters.data;
-					this.monsterOrHeroloaded = false;
-					this.encounterLoaded = true;
-				} else {
-					console.log(encounters.data as RequestError);
-				}
-			});
-	}
-
-	showMonsterOrHeroesList(monsterOrHero: number) {
-		this.lastListClicked = monsterOrHero;
-		this._overviewService.getAllMonstersOrHeroes(monsterOrHero)
-			.subscribe((players: RequestResult<any | RequestError>) => {
-				if (players.requestResultType === RequestResultType.Data) {
-					this.players = players.data as Hero[];
+	showListItems(monsterHeroOrEncounter: number) {
+		this.lastListClicked = monsterHeroOrEncounter;
+		this._overviewService.getAllListItems(monsterHeroOrEncounter)
+			.subscribe((it: RequestResult<any | RequestError>) => {
+				if (it.requestResultType === RequestResultType.Data) {
+					this.items = it.data as Monster[] | Hero[] | Encounter[];
 					this.encounterLoaded = false;
-					this.monsterOrHeroloaded = true;
+					this.listLoaded = true;
 				} else {
-					console.log(players.data as RequestError);
+					console.log(it.data as RequestError);
 				}
 			});
 	}
 
-	startEncounter(combatantsOrString) {
-		if (combatantsOrString instanceof Array) {
-			this.savePlayerToCombatant(combatantsOrString);
-			setTimeout(() => {
-				const newEncounter = new Encounter();
-				newEncounter.combatants = this.combatantsList;
-				newEncounter.name = null;
-				this.createEncounter(newEncounter);
-				setTimeout(() => {
-					this._router.navigate(['/encounter', this.newEncounterId]);
-				}, 200);
-			}, 200);
-
+	startEncounter() {
+		if (this.encounter.name && this.encounter._id) {
+			this.saveOrCreateItem(this.encounter, true);
 		} else {
-			this._router.navigate(['/encounter/', combatantsOrString]);
+			console.log(this.encounter);
+			this.encounter.name = 'in Progress';
+			this._overviewService.createNewEncounter(this.encounter)
+				.subscribe((result: RequestResult<any | RequestError>) => {
+					const encounter = result.data;
+					this._router.navigate(['/encounter', encounter._id]);
+				});
 		}
-	}
-
-	viewCombatant(player) {
-		this.createNewMonsterOrHero = false;
-		this.createNewEncounter = false;
-		this.enableEncounter = false;
-		this._overviewService.getMonsterOrHero(player)
-			.subscribe((viewPlayer: RequestResult<any | RequestError>) => {
-				if (viewPlayer.requestResultType === RequestResultType.Data) {
-					this.combatant = viewPlayer.data as Hero;
-					this.enableCombatant = true;
-				}
-			});
-	}
-
-	viewEncounter(encounter) {
-		this.createNewMonsterOrHero = false;
-		this.createNewEncounter = false;
-		this.enableCombatant = false;
-		this.enableEncounter = true;
-		this.encounter = encounter;
 	}
 }

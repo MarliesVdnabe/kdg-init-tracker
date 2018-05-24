@@ -9,7 +9,6 @@ import { BaseRestApiService } from './base-rest.api.service';
 import { RequestError } from '../models/request-error';
 import { RequestResult } from '../models/request-result';
 import { RequestResultType } from '../enums/request-result-type';
-import { Combatant } from '../models/combatant';
 
 @Injectable()
 export class CombatantApiService extends BaseRestApiService {
@@ -21,7 +20,7 @@ export class CombatantApiService extends BaseRestApiService {
 		super(http);
 	}
 
-	createNewCombatants(combatant: Combatant): Observable<any | RequestError> {
+	createNewCombatants(combatant): Observable<any | RequestError> {
 		const headers: HttpHeaders = new HttpHeaders();
 		headers.append('Content-Type', 'application/x-www-form-urlencoded');
 		return this.post(`${this.combatantUrl}/combatant/create`, combatant, headers)

@@ -2,28 +2,25 @@
 	<div id="players">
 		<h2>Library</h2>
 		<div>
-			<button class="button" (click)="showMonsterOrHeroesList(0)">Monsters</button>
-			<button class="button" (click)="showMonsterOrHeroesList(1)">Heroes</button>
-			<button class="button" (click)="showEncountersList()">Encounters</button>
+			<button class="button" (click)="showListItems(0)">Monsters</button>
+			<button class="button" (click)="showListItems(1)">Heroes</button>
+			<button class="button" (click)="showListItems(2)">Encounters</button>
 		</div>
 		<div>
-			<app-list *ngIf="monsterOrHeroloaded" [players]="players" (onItemClicked)="addPlayerToInitiative($event)" (onEditItemClicked)="viewCombatant($event)"
-			 (onAddPlayerClicked)="createNewPlayer($event)"></app-list>
-			<app-list *ngIf="encounterLoaded" [encounters]="encounters" (onItemClicked)="addEncounterToInitiative($event)" (onEditItemClicked)="viewEncounter($event)"></app-list>
+			<app-list *ngIf="listLoaded" [items]="items" [lastListClicked]="lastListClicked" (onItemClicked)="addItemToInitiative($event)"
+			 (onEditItemClicked)="editItem($event)" (onCreateNewClicked)="createNewItem($event)"></app-list>
 		</div>
 	</div>
 	<div id="encounter">
 		<div>
-			<app-initiative-table *ngIf="combatants.length" [updatedPlayer]='updatedPlayer' [combatants]="combatants" [encounterId]="encounterId"
-			 (onStartEncounter)="startEncounter($event)" (onSaveEncounter)="saveCombatantsToEncounter($event)"></app-initiative-table>
+			<app-initiative-table *ngIf="showEncounter" [encounterItems]='encounterItems' [updatedItem]="updatedItem" (onRemoveItem)="removeItem($event)"
+			 (onStartEncounter)="startEncounter()" (onSaveEncounter)="giveNewEncounterName()"></app-initiative-table>
 		</div>
 	</div>
-	<div id="specs">
+	<div id="specs" *ngIf="editLoaded || showCreateMonsterHeroOrEncounter">
 		<div>
-			<app-specs *ngIf="enableCombatant" [combatant]="combatant" (onSaveChanges)="editPlayer($event)" (onCancelClicked)="cancel()"></app-specs>
-			<app-specs *ngIf="createNewMonsterOrHero" [monsterOrHero]="monsterOrHero" (onSaveChanges)="savePlayer($event)" (onCancelClicked)="cancel()"></app-specs>
-			<app-specs *ngIf="enableEncounter" [encounter]="encounter" (onSaveEncounter)="saveEncounter($event)" (onCancelClicked)="cancel()"></app-specs>
-			<app-specs *ngIf="createNewEncounter" [combatantsList]="combatantsList" (onSaveEncounter)="createEncounter($event)" (onCancelClicked)="cancel()"></app-specs>
+			<app-specs [item]="item" [createItem]="createItem" (onSaveItem)="saveOrCreateItem($event)"
+			 (onCancelClicked)="cancel()"></app-specs>
 		</div>
 	</div>
 </div>

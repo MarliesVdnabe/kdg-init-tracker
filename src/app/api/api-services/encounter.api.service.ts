@@ -13,7 +13,7 @@ import { Encounter } from '../models/encounter';
 
 @Injectable()
 export class EncounterApiService extends BaseRestApiService {
-	private encounterUrl: string = environment.apiUrl;
+	private backendUrl: string = environment.apiUrl;
 
 	constructor(
 		http: HttpClient
@@ -22,10 +22,10 @@ export class EncounterApiService extends BaseRestApiService {
 	}
 
 	createNewEncounter(encounter: Encounter): Observable<any | RequestError> {
-		return this.post(`${this.encounterUrl}/encounter/create`, encounter)
+		return this.post(`${this.backendUrl}/encounter/create`, encounter)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
-					return new RequestResult(result.requestResultType, result.data);
+					return new RequestResult(result.requestResultType, new Encounter(result.data));
 				} else {
 					return result.data as RequestResult<RequestError>;
 				}
@@ -33,18 +33,20 @@ export class EncounterApiService extends BaseRestApiService {
 	}
 
 	getAllEncounters(): Observable<any | RequestError> {
-		return this.get(`${this.encounterUrl}/encounters`)
+		return this.get(`${this.backendUrl}/encounters`)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
-					return new RequestResult(result.requestResultType, result.data);
+					return new RequestResult(result.requestResultType, (result.data as Encounter[]).map((encounter: any) => new Encounter(encounter)));
 				} else {
 					return result.data as RequestResult<RequestError>;
 				}
 			});
 	}
 
+
+	// Niet gebruikt?
 	getEncounter(id: string): Observable<any | RequestError> {
-		return this.get(`${this.encounterUrl}/encounter/${id}`)
+		return this.get(`${this.backendUrl}/encounter/${id}`)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
 					return new RequestResult(result.requestResultType, result.data);
@@ -55,9 +57,7 @@ export class EncounterApiService extends BaseRestApiService {
 	}
 
 	saveEncounter(encounter: Encounter): Observable<any | RequestError> {
-		const headers: HttpHeaders = new HttpHeaders();
-		headers.append('Content-Type', 'application/x-www-form-urlencoded');
-		return this.post(`${this.encounterUrl}/encounter/${encounter._id}/update`, encounter, headers)
+		return this.post(`${this.backendUrl}/encounter/${encounter._id}/save`, encounter)
 			.map((result: RequestResult<any | RequestError>) => {
 				if (result.requestResultType === RequestResultType.Data) {
 					return new RequestResult(result.requestResultType, result.data);
@@ -65,5 +65,17 @@ export class EncounterApiService extends BaseRestApiService {
 					return result.data as RequestResult<RequestError>;
 				}
 			});
+	}
+
+	updateEncounter(encounter: Encounter): Observable<any | RequestError> {
+		return this.post(`${this.backendUrl}/encounter/${encounter._id}/update`, encounter)
+			.map((result: RequestResult<any | RequestError>) => {
+				if (result.requestResultType === RequestResultType.Data) {
+					return new RequestResult(result.requestResultType, result.data);
+				} else {
+					return result.data as RequestResult<RequestError>;
+				}
+			});
+
 	}
 }

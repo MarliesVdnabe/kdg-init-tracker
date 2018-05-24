@@ -20,8 +20,11 @@ html {
 }
 
 button:hover {
-	background-color: #24d8ab;
-	
+	background-color: #034e58;
+}
+
+button:disabled {
+	background-color: #707677
 }
 
 input {

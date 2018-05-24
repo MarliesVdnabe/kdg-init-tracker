@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Combatant } from '../../../../api/models/combatant';
 
 @Component({
 	selector: 'app-encounter-board',
@@ -8,7 +7,7 @@ import { Combatant } from '../../../../api/models/combatant';
 })
 
 export class EncounterBoardComponent implements OnInit {
-	@Input() combatants: Combatant[];
+	@Input() combatants;
 
 	constructor() { }
 

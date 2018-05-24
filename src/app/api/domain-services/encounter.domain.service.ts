@@ -26,4 +26,8 @@ export class EncounterDomainService {
 	saveEncounter(encounter: Encounter): Observable<any | RequestError> {
 		return this._encounterApiService.saveEncounter(encounter);
 	}
+
+	updateEncounter(encounter: Encounter): Observable<any | RequestError> {
+		return this._encounterApiService.updateEncounter(encounter);
+	}
 }
