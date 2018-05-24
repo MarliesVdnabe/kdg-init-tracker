@@ -9,7 +9,7 @@
 <button *ngIf="players" class="button" (click)="addNewplayer(players[0].type)">Add new {{playerType[players[0].type]}}</button>
 
 <ul *ngIf="!players">
-	<li class="hero" *ngFor="let encounter of encounters">
+	<li class="hero" *ngFor="let encounter of filteredEncounters">
 		<span (click)="selectItem(encounter)">{{encounter.name}}</span>
 		<span (click)="editItem(encounter)">
 			<img src="../../../../../assets/images/pencil_edit.png" alt="Edit">

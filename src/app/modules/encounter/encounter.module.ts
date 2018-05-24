@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { EncounterResolver } from './resolver/encounter.resolver';
+import { EncounterBoardComponent } from './presentation/encounter-board/encounter-board.component';
 
 export const myEncounterRoutes = [
 	{ path: '', component: EncounterComponent, resolve: { encounter: EncounterResolver } }
@@ -11,14 +12,16 @@ export const myEncounterRoutes = [
 
 @NgModule({
 	declarations: [
-		EncounterComponent
+		EncounterComponent,
+		EncounterBoardComponent
 	],
 	imports: [
 		CommonModule,
 		RouterModule.forChild(myEncounterRoutes)
 	],
 	exports: [
-		EncounterComponent
+		EncounterComponent,
+		EncounterBoardComponent
 	],
 	providers: [
 		EncounterResolver

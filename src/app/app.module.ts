@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { OverviewModule } from './modules/overview/overview.module';
 import { EncounterModule } from './modules/encounter/encounter.module';
 import { DomainServicesModule } from './api/domain-services/domain-services.module';
+import { SharedService } from './modules/shared/services/shared.service';
 
 const appRoutes: Routes = [
 	{ path: 'overview', loadChildren: './modules/overview/overview.module#OverviewModule' },
@@ -25,7 +26,9 @@ const appRoutes: Routes = [
 		RouterModule.forRoot(appRoutes, {}),
 		DomainServicesModule.forRoot(),
 	],
-	providers: [],
+	providers: [
+		SharedService
+	],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

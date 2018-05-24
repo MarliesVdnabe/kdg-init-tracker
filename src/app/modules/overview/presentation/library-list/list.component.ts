@@ -11,6 +11,7 @@ import { Encounter } from '../../../../api/models/encounter';
 
 export class ListComponent implements OnChanges {
 	playerType = PlayerType;
+	filteredEncounters: Encounter[];
 
 	@Input() players: Hero[];
 	@Input() encounters: Encounter[];
@@ -22,6 +23,9 @@ export class ListComponent implements OnChanges {
 
 	ngOnChanges(changes: SimpleChanges) {
 		this.sortList(this.players);
+		if (this.encounters) {
+			this.filteredEncounters = this.encounters.filter(x => (x.name !== null));
+		}
 	}
 
 	addNewplayer(monsterOrHero) {

@@ -70,8 +70,9 @@ export class SpecsComponent implements OnChanges {
 			this.combatant.armorClass = model.Armorclass;
 			this.combatant.hitPoints = model.Hitpoints;
 			this.combatant.initModifier = model.Initiative;
+			this.combatant.type = this.monsterOrHero;
 			if (this.combatant.type === this.playerType.Hero) {
-				this.combatant.player = model.player;
+				this.combatant.player = model.Player;
 			}
 			this.onSaveChanges.emit(this.combatant);
 		} else {
@@ -82,7 +83,7 @@ export class SpecsComponent implements OnChanges {
 			newPlayer.initModifier = model.Initiative;
 			newPlayer.type = this.monsterOrHero;
 			if (this.monsterOrHero === this.playerType.Hero) {
-				newPlayer.type = model.player;
+				newPlayer.player = model.Player;
 			}
 			this.onSaveChanges.emit(newPlayer);
 		}

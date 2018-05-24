@@ -122,6 +122,7 @@ export class OverviewComponent implements OnInit {
 	}
 
 	createNewPlayer(monsterOrHero) {
+		console.log(monsterOrHero);
 		this.createNewMonsterOrHero = true;
 		this.enableCombatant = false;
 		this.enableEncounter = false;
