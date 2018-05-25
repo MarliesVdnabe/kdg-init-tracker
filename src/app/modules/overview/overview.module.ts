@@ -11,6 +11,7 @@ import { InitiativeTableComponent } from './presentation/initiative-table/initia
 /* Services */
 import { OverviewService } from './services/overview.service';
 import { SpecsComponent } from './presentation/specs/specs.component';
+import { MappingPipe } from '../shared/pipe/mapping.pipe';
 
 export const myOverviewRoutes = [
 	{ path: '', component: OverviewComponent }
@@ -18,6 +19,7 @@ export const myOverviewRoutes = [
 
 @NgModule({
 	declarations: [
+		MappingPipe,
 		OverviewComponent,
 		ListComponent,
 		InitiativeTableComponent,
@@ -29,6 +31,7 @@ export const myOverviewRoutes = [
 		RouterModule.forChild(myOverviewRoutes)
 	],
 	exports: [
+		MappingPipe,
 		OverviewComponent,
 		ListComponent,
 		InitiativeTableComponent,

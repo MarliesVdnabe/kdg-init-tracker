@@ -3,7 +3,11 @@ table {
 	border-collapse: collapse;
 	width: 100%;
 	tr {
+		cursor: pointer;
 		border: 1px solid #192231;
+	}
+	tr:hover{
+		background-color: #ccc;
 	}
 	td {
 		width:50px;
@@ -21,6 +25,12 @@ table {
 		cursor: pointer;
 	}
 }
+
+.active {
+	background-color:  #24d8ab;
+}
+
+// CSS FOR SWITCH //
 
 .switch {
 	position: relative;

@@ -1,6 +1,8 @@
-<h1> PLAYING BOARD</h1>
 <table>
 	<tr>
+		<th>
+			<img src="../../../../../assets/images/dice.png" alt="Initiative">
+		</th>
 		<th>Combatant</th>
 		<th>
 			<img src="../../../../../assets/images/favorite-heart.png" alt="Hitpoints">
@@ -8,24 +10,22 @@
 		<th>
 			<img src="../../../../../assets/images/rpg-game.png" alt="Armor Class">
 		</th>
-		<th>
-			<img src="../../../../../assets/images/dice.png" alt="Initiative">
-		</th>
 		<th>Player</th>
 		<th>Remove combatant</th>
 		<th>Visibility</th>
 	</tr>
-	<tr *ngFor="let combatant of combatants" class="{{combatant.item}}">
-		<td>{{combatant.player.name | uppercase}} {{combatant.tempId}}</td>
-		<td>{{combatant.game.currentHitPoints}}/{{combatant.player.hitPoints}}</td>
-		<td>{{combatant.player.armorClass}}</td>
-		<td>{{combatant.game.initiative}}</td>
-		<td>{{combatant.player.player}}</td>
-		<td (click)="removeCombatant(combatant.player.name, combatant.tempId)">
+	<tr *ngFor="let item of encounterItems; let i = index;" [ngClass]="{'active': item.played && encounterStarted}" (click)="showItemDetails(encounterItems[i])">
+		<td>{{item.initiative}}</td>
+		<td>{{item.originalItem.name | uppercase}}</td>
+		<td>{{item.currentHitPoints}}/{{item.originalItem.hitPoints}}</td>
+		<td>{{item.originalItem.armorClass}}</td>
+		<td *ngIf="item.originalItem.creatureType === 1">{{item.originalItem.player}}</td>
+		<td *ngIf="item.originalItem.creatureType === 0"></td>
+		<td (click)="removeCombatant()">
 			<img class="editImage" src="../../../../../assets/images/cancel.png" alt="remove">
 		</td>
 		<td>
-			<label class="switch">
+			<label class="switch" *ngIf="item.originalItem.creatureType === 0">
 				<input type="checkbox" checked>
 				<span class="slider round"></span>
 			</label>

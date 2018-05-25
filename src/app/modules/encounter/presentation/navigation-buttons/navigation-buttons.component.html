@@ -1,0 +1,6 @@
+<div>
+	<button *ngIf="started" class="button" (click)="buttonClicked('prev')">Previous</button>
+	<button *ngIf="!started" class="button" (click)="buttonClicked('start')">Start</button>
+	<button *ngIf="started" class="button" (click)="buttonClicked('stop')"> Stop</button>
+	<button *ngIf="started" class="button" (click)="buttonClicked('next')">Next</button>
+</div>

@@ -7,7 +7,6 @@ import { Hero } from '../../../api/models/hero';
 import { HeroDomainService } from '../../../api/domain-services/hero.domain.service';
 import { MonsterDomainService } from '../../../api/domain-services/monster.domain.service';
 import { EncounterDomainService } from '../../../api/domain-services/encounter.domain.service';
-import { CombatantDomainService } from '../../../api/domain-services/combatant.domain.service';
 import { Encounter } from '../../../api/models/encounter';
 import { Monster } from '../../../api/models/monster';
 
@@ -19,7 +18,6 @@ export class OverviewService {
 		private _heroService: HeroDomainService,
 		private _monsterService: MonsterDomainService,
 		private _encounterService: EncounterDomainService,
-		private _combatantService: CombatantDomainService
 	) { }
 
 	/* GENERAL */
@@ -62,14 +60,6 @@ export class OverviewService {
 			return this.updateEncounter(item);
 		}
 	}
-
-	// updateMonsterOrHero(player: Hero) {
-	// 	if (player.creatureType === this.creaturetypeEnum.Monster) {
-	// 		return this.updateMonster(player);
-	// 	} else {
-	// 		return this.updateHero(player);
-	// 	}
-	// }
 
 	// * HEROES * //
 	createNewHero(hero: Hero): Observable<any | RequestError> {

@@ -8,7 +8,6 @@ import { CreatureTypeEnum } from '../../../../api/enums/creature-type';
 import { Encounter } from '../../../../api/models/encounter';
 import { Router } from '@angular/router/';
 import { Monster, EncounterMonster } from '../../../../api/models/monster';
-import { start } from 'repl';
 
 @Component({
 	selector: 'app-overview',
@@ -26,18 +25,7 @@ export class OverviewComponent implements OnInit {
 	item: Hero | Monster | Encounter;
 	updatedItem: Hero | Monster | Encounter = null;
 	createItem: number;
-
-	combatant: Hero;
-	combatants = [];
-	list: string;
 	lastListClicked: number;
-	// updatedPlayer: Hero = null;
-	monsterOrHero: number;
-	// encounter: Encounter;
-	encounters: Encounter[];
-	combatantsList = [];
-	encounterId: string;
-	newEncounterId: string;
 
 	// Enums
 	creaturetypeEnum = CreatureTypeEnum;
@@ -47,15 +35,7 @@ export class OverviewComponent implements OnInit {
 	showCreateMonsterHeroOrEncounter = false;
 	listLoaded = false;
 	editLoaded = false;
-
-
-	monsterOrHeroloaded: Boolean = false;
 	encounterLoaded: Boolean = false;
-	enableCombatant: Boolean = false;
-	reload: Boolean = false;
-	createNew: Boolean = false;
-	createNewEncounter: Boolean = false;
-	enableEncounter: Boolean = false;
 
 	constructor(
 		private _overviewService: OverviewService,
@@ -130,16 +110,15 @@ export class OverviewComponent implements OnInit {
 		this.encounter.monsters = monsters;
 	}
 
-	saveOrCreateItem(item, startEncounter?: boolean) {
+	saveOrCreateItem(item) {
 		if (item._id) {
 			this._overviewService.saveItem(item)
 				.subscribe((updatdItem: RequestResult<any | RequestError>) => {
 					if (updatdItem.requestResultType === RequestResultType.Data) {
 						this.updatedItem = updatdItem.data as Hero | Encounter | Monster;
-						if (startEncounter) {
-							this._router.navigate(['/encounter', item._id]);
-						}
-						console.log('updated', this.updatedItem);
+						this.editLoaded = false;
+					} else {
+						console.log(updatdItem.data as RequestError);
 					}
 				});
 		} else {
@@ -153,9 +132,8 @@ export class OverviewComponent implements OnInit {
 						const newItem = newItm.data;
 						this.showListItems(this.lastListClicked);
 						this.showCreateMonsterHeroOrEncounter = false;
-						if (startEncounter) {
-							this._router.navigate(['/encounter', newItem._id]);
-						}
+					} else {
+						console.log(newItm.data as RequestError);
 					}
 				});
 		}
@@ -177,9 +155,8 @@ export class OverviewComponent implements OnInit {
 
 	startEncounter() {
 		if (this.encounter.name && this.encounter._id) {
-			this.saveOrCreateItem(this.encounter, true);
+			this._router.navigate(['/encounter', this.encounter._id]);
 		} else {
-			console.log(this.encounter);
 			this.encounter.name = 'in Progress';
 			this._overviewService.createNewEncounter(this.encounter)
 				.subscribe((result: RequestResult<any | RequestError>) => {

@@ -5,7 +5,6 @@ import { HttpModule } from '@angular/http';
 import { HeroApiService } from './hero.api.service';
 import { MonsterApiService } from './monster.api.service';
 import { EncounterApiService } from './encounter.api.service';
-import { CombatantApiService } from './combatant.api.service';
 
 @NgModule({
 	imports: [
@@ -20,8 +19,7 @@ export class ApiServicesModule {
 			providers: [
 				HeroApiService,
 				MonsterApiService,
-				EncounterApiService,
-				CombatantApiService
+				EncounterApiService
 			]
 		};
 	}

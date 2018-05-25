@@ -1,18 +1,12 @@
+<form [formGroup]="searchForm">
+	<input *ngIf="lastListClicked === 0" type="text" formControlName="search" placeholder="Search a monster...">
+</form>
 <ul *ngIf="items">
-	<li class="hero" *ngFor="let item of items">
+	<li class="hero" *ngFor="let item of items | mapping: showFiltered.bind(this)">
 		<span (click)="selectItem(item)">{{item.name}}</span>
 		<span (click)="editItem(item)">
 			<img src="../../../../../assets/images/pencil_edit.png" alt="Edit">
 		</span>
 	</li>
 </ul>
-<button *ngIf="lastListClicked === 0 || lastListClicked === 1" class="button" (click)="addNewItem(lastListClicked)">Add new {{creatureTypeEnum[lastListClicked]}}</button>
-
-<!-- <ul *ngIf="!players">
-	<li class="hero" *ngFor="let encounter of filteredEncounters">
-		<span (click)="selectItem(encounter)">{{encounter.name}}</span>
-		<span (click)="editItem(encounter)">
-			<img src="../../../../../assets/images/pencil_edit.png" alt="Edit">
-		</span>
-	</li>
-</ul> -->
+<button *ngIf="lastListClicked===0 || lastListClicked===1" class="button" (click)="addNewItem(lastListClicked)">Add new {{creatureTypeEnum[lastListClicked]}}</button>

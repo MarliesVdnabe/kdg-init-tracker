@@ -1,0 +1,35 @@
+<!-- <div>
+	<h3>Active Combatant</h3>
+	<form [formGroup]="combatantForm" (ngSubmit)="saveItem()">
+		<label for="name">Name:</label>
+		<input type="text" id="name" formControlName="Name" [ngClass]="{'invalid': !combatantForm.controls['Name'].valid && combatantForm.controls['Name'].touched}">
+		<label for="hitPoints">Hitpoints</label>
+		<input [ngClass]="{'invalid': !combatantForm.controls['Hitpoints'].valid && combatantForm.controls['Hitpoints'].touched}"
+		 type="number" id="hitPoints" formControlName="Hitpoints">
+		<label for="armorClass">Armorclass:</label>
+		<input [ngClass]="{'invalid': !combatantForm.controls['Armorclass'].valid && combatantForm.controls['Armorclass'].touched}"
+		 type="number" id="armorClass" formControlName="Armorclass">
+		<label for="initiative">Initiative:</label>
+		<input [ngClass]="{'invalid': !combatantForm.controls['Initiative'].valid && combatantForm.controls['Initiative'].touched}"
+		 type="number" id="initiative" formControlName="Initiative">
+		<button *ngIf="!disableInput" class="button" type="submit" [disabled]="combatantForm && !combatantForm.valid">Save</button>
+		<button *ngIf="!disableInput" type="button" class="button" (click)="cancel()">Cancel</button>
+	</form>
+</div> -->
+<dl>
+	<dt>Name:</dt>
+	<dd>{{activePlayer.originalItem.name}}</dd>
+	<dt>Hitpoints</dt>
+	<dd>{{activePlayer.originalItem.hitPoints}}</dd>
+	<dt>Armorclass:</dt>
+	<dd>{{activePlayer.originalItem.armorClass}}</dd>
+	<dt>Initiative:</dt>
+	<dd>{{activePlayer.originalItem.initModifier}}</dd>
+</dl>
+<form *ngIf="!disableInput && showDamage" [formGroup]="damageForm">
+	<label for="damage">Damage/heal:</label>
+	<input type="number" formControlName="Damage">
+	<button type="button" class="button" (click)="saveDamage('dam')">Damage</button>
+	<button type="button" class="button" (click)="saveDamage('heal')">Heal</button>
+	<button type="button" class="button" (click)="cancel()">Cancel</button>
+</form>

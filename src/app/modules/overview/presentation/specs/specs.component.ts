@@ -63,24 +63,22 @@ export class SpecsComponent implements OnChanges {
 		this.onCancelClicked.emit();
 	}
 
-	saveItem() {
+	getFormData() {
 		if (this.item instanceof Monster) {
 			const model = this.monsterForm.value;
 			this.item.name = model.Name;
 			this.item.armorClass = model.Armorclass;
 			this.item.hitPoints = model.Hitpoints;
 			this.item.initModifier = model.Initiative;
-			this.onSaveItem.emit(this.item);
 		} else if (this.createItem === this.creatureTypeEnum.Monster) {
 			const model = this.monsterForm.value;
-			const newItem = new Monster({
+			this.item = new Monster({
 				name: model.Name,
 				armorClass: model.Armorclass,
 				hitPoints: model.Hitpoints,
 				initModifier: model.Initiative,
 				creatureType: 0
 			});
-			this.onSaveItem.emit(newItem);
 		} else if (this.item instanceof Hero) {
 			const model = this.heroForm.value;
 			this.item.name = model.Name;
@@ -88,10 +86,9 @@ export class SpecsComponent implements OnChanges {
 			this.item.armorClass = model.Armorclass;
 			this.item.hitPoints = model.Hitpoints;
 			this.item.initModifier = model.Initiative;
-			this.onSaveItem.emit(this.item);
 		} else if (this.createItem === this.creatureTypeEnum.Hero) {
 			const model = this.heroForm.value;
-			const newItem = new Hero({
+			this.item = new Hero({
 				name: model.Name,
 				player: model.Player,
 				armorClass: model.Armorclass,
@@ -99,21 +96,22 @@ export class SpecsComponent implements OnChanges {
 				initModifier: model.Initiative,
 				creatureType: 1
 			});
-			this.onSaveItem.emit(newItem);
 		} else if (this.item instanceof Encounter) {
 			const model = this.encounterForm.value;
 			this.item.name = model.Name;
-			this.onSaveItem.emit(this.item);
 		} else {
 			const model = this.encounterForm.value;
-			const newItem = new Encounter({
+			this.item = new Encounter({
 				name: model.Name,
 				heroes: [],
 				monsters: []
 			});
-			this.onSaveItem.emit(newItem);
 		}
+	}
 
+	saveItem() {
+		this.getFormData();
+		this.onSaveItem.emit(this.item);
 	}
 
 	setFormData() {

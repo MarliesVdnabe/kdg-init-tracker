@@ -1,2 +1,15 @@
-<h1> MODULE WORKS</h1>
-<app-encounter-board [combatants]="combatants"></app-encounter-board>
+<h2>{{encounter.name}}</h2>
+<app-navigation-buttons (onActionButtonClicked)="actionClicked($event)"></app-navigation-buttons>
+<div class="container">
+	<div id="activePlayer" *ngIf="showActivePlayer">
+		<app-specs-player [activePlayer]="activePlayer" [disableInput]="true"></app-specs-player>
+	</div>
+	<div id="encounter">
+		<app-encounter-board [encounterItems]="encounterItems" [encounterStarted]="showActivePlayer" (onItemClicked)="showDetailsItem($event)"></app-encounter-board>
+	</div>
+	<div id="activePlayer" *ngIf="showDetailsPlayer">
+		<app-specs-player [activePlayer]="detailsItem" [disableInput]="false" [showDamage]="showActivePlayer" (onSaveDamage)="saveDamageOrHeal($event)"
+		 (onCancelClicked)="cancel()"></app-specs-player>
+	</div>
+</div>
+<app-roll-initiative *ngIf="rollInit" [encounterItems]="encounterItems" (onInitSaved)="updateEncounter()"></app-roll-initiative>

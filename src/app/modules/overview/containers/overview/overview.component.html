@@ -12,15 +12,10 @@
 		</div>
 	</div>
 	<div id="encounter">
-		<div>
-			<app-initiative-table *ngIf="showEncounter" [encounterItems]='encounterItems' [updatedItem]="updatedItem" (onRemoveItem)="removeItem($event)"
-			 (onStartEncounter)="startEncounter()" (onSaveEncounter)="giveNewEncounterName()"></app-initiative-table>
-		</div>
+		<app-initiative-table *ngIf="showEncounter" [encounterItems]='encounterItems' [updatedItem]="updatedItem" (onRemoveItem)="removeItem($event)"
+		 (onStartEncounter)="startEncounter()" (onSaveEncounter)="giveNewEncounterName()"></app-initiative-table>
 	</div>
 	<div id="specs" *ngIf="editLoaded || showCreateMonsterHeroOrEncounter">
-		<div>
-			<app-specs [item]="item" [createItem]="createItem" (onSaveItem)="saveOrCreateItem($event)"
-			 (onCancelClicked)="cancel()"></app-specs>
-		</div>
+		<app-specs [item]="item" [createItem]="createItem" (onSaveItem)="saveOrCreateItem($event)" (onCancelClicked)="cancel()"></app-specs>
 	</div>
 </div>
