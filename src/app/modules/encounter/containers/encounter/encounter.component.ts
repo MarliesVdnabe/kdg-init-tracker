@@ -23,6 +23,7 @@ export class EncounterComponent implements OnInit {
 	activePlayer: EncounterHero | EncounterMonster;
 	detailsItem: EncounterHero | EncounterMonster;
 	playedIndex: number;
+	wonOrLost = undefined;
 
 	// State
 	rollInit = false;
@@ -30,6 +31,7 @@ export class EncounterComponent implements OnInit {
 	showDetailsPlayer = false;
 
 	constructor(
+		private _router: Router,
 		private _route: ActivatedRoute,
 		private _encounterService: EncounterService
 	) {
@@ -49,6 +51,7 @@ export class EncounterComponent implements OnInit {
 		// Create temp list to skip the disabled monsters
 		const tempEncounterItems = this.encounterItems.filter(i => i.originalItem.creatureType === 1
 			|| i.originalItem.creatureType === 0 && i.visible);
+		this.checkGameState(tempEncounterItems);
 		switch (action) {
 			case 'start':
 				const item = tempEncounterItems.find(x => x.played === true);
@@ -98,9 +101,45 @@ export class EncounterComponent implements OnInit {
 		this.showDetailsPlayer = false;
 	}
 
+	checkGameState(encounterList) {
+		this.encounterItems.forEach(e => {
+			if (e.originalItem.creatureType === 1) {
+				e.visible = true;
+			}
+		});
+		const activeMonsters = encounterList.filter(m => m.currentHitPoints > 0 && m.originalItem.creatureType === 0);
+		const activeHeroes = encounterList.filter(m => m.currentHitPoints > 0 && m.originalItem.creatureType === 1);
+		if (!activeMonsters.length) {
+			this.wonOrLost = 'won';
+		}
+		if (!activeHeroes.length) {
+			this.wonOrLost = 'lost';
+		}
+		// Skip items that have current hitpoint = 0
+		const inactivePlayers = encounterList.filter(m => m.currentHitPoints === 0);
+		inactivePlayers.forEach(el => {
+			el.visible = false;
+		});
+		for (let i = 0; i < inactivePlayers.length; i++) {
+			const item = encounterList.find(x => x._id === inactivePlayers[i]._id);
+			const index = encounterList.indexOf(item);
+			encounterList.splice(index, 1);
+		}
+	}
+
+	closeEncounter() {
+		this._router.navigate(['/overview']);
+	}
+
 	encounterToListItems() {
 		const heroes: EncounterHero[] = this.encounter.heroes;
 		const monsters: EncounterMonster[] = this.encounter.monsters;
+		if (!heroes.length) {
+			return;
+		}
+		if (!monsters.length) {
+			return;
+		}
 		for (let i = 0; i < heroes.length; i++) {
 			this.encounterItems.push(heroes[i]);
 		}
@@ -140,6 +179,10 @@ export class EncounterComponent implements OnInit {
 
 	showDetailsItem(item) {
 		this.showDetailsPlayer = true;
+		setTimeout(() => {
+			console.log('start timer');
+			this.showDetailsPlayer = false;
+		}, 30000);
 		this.detailsItem = item;
 	}
 

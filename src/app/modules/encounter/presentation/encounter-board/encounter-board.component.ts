@@ -24,16 +24,16 @@ export class EncounterBoardComponent implements OnChanges {
 		this.encounterItems.sort(this.sortAsc());
 	}
 
-	sortAsc() {
-		return (a: EncounterHero | EncounterMonster, b: EncounterHero | EncounterMonster) => {
-			if (a.initiative < b.initiative) {
-				return 1;
-			} else if (a.initiative > b.initiative) {
-				return -1;
-			} else {
-				return 0;
-			}
-		};
+	confirmDelete(yOrN) {
+		this.showPopup = false;
+		if (yOrN === 'y') {
+			this.onRemoveItem.emit(this.removeItemIndex);
+		}
+	}
+
+	removeCombatant(index) {
+		this.removeItemIndex = index;
+		this.showPopup = true;
 	}
 
 	showItemDetails(event, encounterItem) {
@@ -48,16 +48,15 @@ export class EncounterBoardComponent implements OnChanges {
 		this.onItemClicked.emit(encounterItem);
 	}
 
-
-	removeCombatant(index) {
-		this.removeItemIndex = index;
-		this.showPopup = true;
-	}
-
-	confirmDelete(yOrN) {
-		this.showPopup = false;
-		if (yOrN === 'y') {
-			this.onRemoveItem.emit(this.removeItemIndex);
-		}
+	sortAsc() {
+		return (a: EncounterHero | EncounterMonster, b: EncounterHero | EncounterMonster) => {
+			if (a.initiative < b.initiative) {
+				return 1;
+			} else if (a.initiative > b.initiative) {
+				return -1;
+			} else {
+				return 0;
+			}
+		};
 	}
 }

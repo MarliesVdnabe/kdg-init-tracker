@@ -14,3 +14,9 @@
 	</div>
 </div>
 <app-roll-initiative *ngIf="rollInit" [encounterItems]="encounterItems" (onInitSaved)="updateEncounter()"></app-roll-initiative>
+
+<div *ngIf="wonOrLost" class="endState">
+	<p>The game is over. You have {{wonOrLost}} all battles.</p>
+	<button *ngIf="wonOrLost === 'won'" class="button" (click)="closeEncounter()">Wohoow!</button>
+	<button *ngIf="wonOrLost === 'lost'" class="button" (click)="closeEncounter()">Try again</button>
+</div>

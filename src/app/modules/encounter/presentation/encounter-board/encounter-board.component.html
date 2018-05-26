@@ -1,5 +1,6 @@
 <table>
 	<tr>
+		<th></th>
 		<th>
 			<img src="../../../../../assets/images/dice.png" alt="Initiative">
 		</th>
@@ -16,6 +17,12 @@
 	</tr>
 	<tr *ngFor="let item of encounterItems; let i = index;" [ngClass]="{'active': item.played && encounterStarted, 'selected': item.selected}"
 	 (click)="showItemDetails($event, encounterItems[i])">
+		<td *ngIf="item.originalItem.creatureType === 0">
+			<img src="../../../../../assets/images/japanese-dragon.png">
+		</td>
+		<td *ngIf="item.originalItem.creatureType === 1">
+			<img src="../../../../../assets/images/helmet.png">
+		</td>
 		<td>{{item.initiative}}</td>
 		<td>{{item.originalItem.name | uppercase}}</td>
 		<td>{{item.currentHitPoints}}/{{item.originalItem.hitPoints}}</td>
