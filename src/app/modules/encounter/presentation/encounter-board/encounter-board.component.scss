@@ -16,7 +16,7 @@ table {
 		color: #414141;
 	}
 	tr:hover{
-		color: #FF6860;
+		color: #056571;
 	}
 	td {
 		width:50px;
@@ -36,14 +36,15 @@ table {
 }
 
 .active {
-	background-color:  #FF6860;
-	color: #fff;
+	color: #056571;
+	background-color: #CCDFCB;
 }
 .active:hover {
-	color: #414141 !important;
+	color: #056571 !important;
 }
 
 .selected {
+	color: #056571;
 	border: 2px solid #056571 !important;
 }
 
