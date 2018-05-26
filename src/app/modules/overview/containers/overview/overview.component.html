@@ -1,10 +1,10 @@
 <div class="container">
 	<div id="players">
-		<h2>Library</h2>
-		<div>
-			<button class="button" (click)="showListItems(0)">Monsters</button>
-			<button class="button" (click)="showListItems(1)">Heroes</button>
-			<button class="button" (click)="showListItems(2)">Encounters</button>
+		<h2>Choose your players</h2>
+		<div class="buttons-container">
+			<button class="button" [ngClass]="{'active': clicked === 0}" (click)="showListItems(0)">Monsters</button>
+			<button class="button" [ngClass]="{'active': clicked === 1}" (click)="showListItems(1)">Heroes</button>
+			<button class="button" [ngClass]="{'active': clicked === 2}" (click)="showListItems(2)">Encounters</button>
 		</div>
 		<div>
 			<app-list *ngIf="listLoaded" [items]="items" [lastListClicked]="lastListClicked" (onItemClicked)="addItemToInitiative($event)"
@@ -14,8 +14,7 @@
 	<div id="encounter">
 		<app-initiative-table *ngIf="showEncounter" [encounterItems]='encounterItems' [updatedItem]="updatedItem" (onRemoveItem)="removeItem($event)"
 		 (onStartEncounter)="startEncounter()" (onSaveEncounter)="giveNewEncounterName()"></app-initiative-table>
-	</div>
-	<div id="specs" *ngIf="editLoaded || showCreateMonsterHeroOrEncounter">
-		<app-specs [item]="item" [createItem]="createItem" (onSaveItem)="saveOrCreateItem($event)" (onCancelClicked)="cancel()"></app-specs>
+		<app-specs *ngIf="editLoaded || showCreateMonsterHeroOrEncounter" [item]="item" [createItem]="createItem" (onSaveItem)="saveOrCreateItem($event)"
+		 (onCancelClicked)="cancel()"></app-specs>
 	</div>
 </div>

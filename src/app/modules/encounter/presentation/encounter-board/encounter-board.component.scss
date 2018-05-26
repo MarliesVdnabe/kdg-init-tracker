@@ -1,19 +1,28 @@
 @import '../../../../app.component.scss';
 table {
+	
 	border-collapse: collapse;
 	width: 100%;
 	tr {
 		cursor: pointer;
 		border: 1px solid #192231;
 	}
+	tr:first-child{
+		background-color: #CCDFCB;
+		font-weight: bold;
+	}
+	th:first-child {padding: 0.5rem;}
+	tr:hover:first-child{
+		color: #414141;
+	}
 	tr:hover{
-		background-color: #ccc;
+		color: #FF6860;
 	}
 	td {
 		width:50px;
 		text-align:center; 
 		padding: 1rem;
-    	font-weight: bold;
+    	font-weight: normal;
 	}
 	img {
 		height: 1.5rem;
@@ -27,11 +36,15 @@ table {
 }
 
 .active {
-	background-color:  #24d8ab;
+	background-color:  #FF6860;
+	color: #fff;
+}
+.active:hover {
+	color: #414141 !important;
 }
 
 .selected {
-	border: 2px solid blue !important;
+	border: 2px solid #056571 !important;
 }
 
 // CSS FOR SWITCH //
@@ -54,7 +67,7 @@ table {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: #ccc;
+	background-color: #FF6860;
 	-webkit-transition: .4s;
 	transition: .4s;
 }
@@ -72,11 +85,11 @@ table {
 }
   
 input:checked + .slider {
-	background-color: $Teal;
+	background-color: #CCDFCB;
 }
   
 input:focus + .slider {
-	box-shadow: 0 0 1px $Teal;
+	box-shadow: 0 0 1px #CCDFCB;
 }
   
 input:checked + .slider:before {

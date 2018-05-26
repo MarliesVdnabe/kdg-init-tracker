@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Input, Output, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input, Output, OnChanges, SimpleChanges, ElementRef } from '@angular/core';
 import { Hero } from '../../../../api/models/hero';
 import { CreatureTypeEnum } from '../../../../api/enums/creature-type';
 import { Encounter } from '../../../../api/models/encounter';

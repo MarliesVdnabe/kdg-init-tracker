@@ -1,81 +1,42 @@
-<!-- <h2 *ngIf="combatant">Edit {{playerType[combatant.type]}}</h2>
-<h2 *ngIf="playerType[monsterOrHero]">Create new {{playerType[monsterOrHero]}}</h2>
-<form *ngIf="combatant || playerType[monsterOrHero]" [formGroup]="combatantForm" (ngSubmit)="saveChanges()">
-	<label for="name">Name:</label>
-	<input [ngClass]="{'invalid': !combatantForm.controls['Name'].valid && combatantForm.controls['Name'].touched }" type="text"
-	 id="name" formControlName="Name">
-	<label *ngIf="playerType[monsterOrHero]==='Hero' || combatant && playerType[combatant.type]==='Hero'" for="player">Player:</label>
-	<input *ngIf="playerType[monsterOrHero]==='Hero' || combatant && playerType[combatant.type]==='Hero'" type="text" id="player"
-	 formControlName="Player">
-	<label for="hitPoints">Hitpoints</label>
-	<input [ngClass]="{'invalid': !combatantForm.controls['Hitpoints'].valid && combatantForm.controls['Hitpoints'].touched}"
-	 type="number" id="hitPoints" formControlName="Hitpoints">
-	<label for="armorClass">Armorclass:</label>
-	<input [ngClass]="{'invalid': !combatantForm.controls['Armorclass'].valid && combatantForm.controls['Armorclass'].touched}"
-	 type="number" id="armorClass" formControlName="Armorclass">
-	<label for="initiative">Initiative:</label>
-	<input [ngClass]="{'invalid': !combatantForm.controls['Initiative'].valid && combatantForm.controls['Initiative'].touched}"
-	 type="number" id="initiative" formControlName="Initiative">
-	<button type="submit" class="button" [disabled]="combatantForm && !combatantForm.valid">Save Changes</button>
-	<button type="button" class="button" (click)="cancel()">Cancel</button>
-</form>
-
-<h2 *ngIf="encounter">Edit encounter</h2>
-<form *ngIf="encounter" [formGroup]="encounterForm" (ngSubmit)="saveEncounter()">
-	<label for="encounterName">Encounter name:</label>
-	<input [ngClass]="{'invalid': !encounterForm.controls['EncounterName'].valid && encounterForm.controls['EncounterName'].touched }"
-	 type="text" id="encounterName" formControlName="EncounterName">
-	<button type="submit" class="button" [disabled]="encounterForm && !encounterForm.valid">Save Changes</button>
-	<button type="button" class="button" (click)="cancel()">Cancel</button>
-</form>
-
-<h2 *ngIf="combatantsList">Create new encounter</h2>
-<form *ngIf="combatantsList" [formGroup]="encounterForm" (ngSubmit)="saveEncounter()">
-	<label for="encounterName">Encounter name:</label>
-	<input [ngClass]="{'invalid': !encounterForm.controls['EncounterName'].valid && encounterForm.controls['EncounterName'].touched }"
-	 type="text" id="encounterName" formControlName="EncounterName">
-	<button type="submit" class="button" [disabled]="encounterForm && !encounterForm.valid">Save Changes</button>
-	<button type="button" class="button" (click)="cancel()">Cancel</button>
-</form> -->
-<h2 *ngIf="item">Edit:</h2>
+<h2 *ngIf="item">Edit</h2>
 <h2 *ngIf="createItem === 0 || createItem === 1 || createItem === 2">Create new {{creatureTypeEnum[createItem]}}:</h2>
 <form *ngIf="formType===0" [formGroup]="monsterForm" (ngSubmit)="saveItem()">
 	<label for="name">Name:</label>
 	<input type="text" id="name" formControlName="Name" [ngClass]="{'invalid': !monsterForm.controls['Name'].valid && monsterForm.controls['Name'].touched }">
-	<label for="hitPoints">Hitpoints</label>
+	<label for="hitPoints" autocomplete="off">Hitpoints</label>
 	<input [ngClass]="{'invalid': !monsterForm.controls['Hitpoints'].valid && monsterForm.controls['Hitpoints'].touched}" type="number"
 	 id="hitPoints" formControlName="Hitpoints">
-	<label for="armorClass">Armorclass:</label>
+	<label for="armorClass" autocomplete="off">Armorclass:</label>
 	<input [ngClass]="{'invalid': !monsterForm.controls['Armorclass'].valid && monsterForm.controls['Armorclass'].touched}" type="number"
 	 id="armorClass" formControlName="Armorclass">
-	<label for="initiative">Initiative:</label>
+	<label for="initiative" autocomplete="off">Initiative:</label>
 	<input [ngClass]="{'invalid': !monsterForm.controls['Initiative'].valid && monsterForm.controls['Initiative'].touched}" type="number"
-	 id="initiative" formControlName="Initiative">
+	 id="initiative" formControlName="Initiative" autocomplete="off">
 	<button class="button" type="submit" [disabled]="monsterForm && !monsterForm.valid">Save</button>
 	<button type="button" class="button" (click)="cancel()">Cancel</button>
 </form>
 
 <form *ngIf="formType===1" [formGroup]="heroForm" (ngSubmit)="saveItem()">
 	<label for="name">Name:</label>
-	<input type="text" id="name" formControlName="Name" [ngClass]="{'invalid': !heroForm.controls['Name'].valid && heroForm.controls['Name'].touched }">
+	<input type="text" id="name" formControlName="Name" autocomplete="off" [ngClass]="{'invalid': !heroForm.controls['Name'].valid && heroForm.controls['Name'].touched }">
 	<label for="player">Player:</label>
 	<input type="text" id="player" formControlName="Player">
 	<label for="hitPoints">Hitpoints</label>
 	<input [ngClass]="{'invalid': !heroForm.controls['Hitpoints'].valid && heroForm.controls['Hitpoints'].touched}" type="number"
-	 id="hitPoints" formControlName="Hitpoints">
+	 id="hitPoints" formControlName="Hitpoints" autocomplete="off">
 	<label for="armorClass">Armorclass:</label>
 	<input [ngClass]="{'invalid': !heroForm.controls['Armorclass'].valid && heroForm.controls['Armorclass'].touched}" type="number"
-	 id="armorClass" formControlName="Armorclass">
+	 id="armorClass" formControlName="Armorclass" autocomplete="off">
 	<label for="initiative">Initiative:</label>
 	<input [ngClass]="{'invalid': !heroForm.controls['Initiative'].valid && heroForm.controls['Initiative'].touched}" type="number"
-	 id="initiative" formControlName="Initiative">
+	 id="initiative" formControlName="Initiative" autocomplete="off">
 	<button class="button" type="submit" [disabled]="heroForm && !heroForm.valid">Save</button>
 	<button type="button" class="button" (click)="cancel()">Cancel</button>
 </form>
 
 <form *ngIf="formType===2" [formGroup]="encounterForm" (ngSubmit)="saveItem()">
 	<label for="name">Name:</label>
-	<input type="text" id="name" formControlName="Name" [ngClass]="{'invalid': !encounterForm.controls['Name'].valid && encounterForm.controls['Name'].touched }">
+	<input type="text" id="name" formControlName="Name" autocomplete="off" [ngClass]="{'invalid': !encounterForm.controls['Name'].valid && encounterForm.controls['Name'].touched }">
 	<button class="button" type="submit" [disabled]="encounterForm && !encounterForm.valid">Save</button>
 	<button type="button" class="button" (click)="cancel()">Cancel</button>
 </form>

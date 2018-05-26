@@ -1,4 +1,4 @@
-import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnChanges, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { EncounterHero } from '../../../../api/models/hero';
 import { EncounterMonster } from '../../../../api/models/monster';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -15,6 +15,7 @@ export class SpecsPlayerComponent implements OnChanges {
 	@Input() showDamage: boolean;
 	@Output() onSaveDamage: EventEmitter<number> = new EventEmitter();
 	@Output() onCancelClicked: EventEmitter<null> = new EventEmitter();
+	@ViewChild('scale') scale: ElementRef;
 	damageForm: FormGroup;
 
 	constructor(
@@ -26,6 +27,11 @@ export class SpecsPlayerComponent implements OnChanges {
 	}
 
 	ngOnChanges() {
+		this.setScale();
+	}
+
+	cancel() {
+		this.onCancelClicked.emit();
 	}
 
 	saveDamage(damageOrHeal) {
@@ -36,7 +42,35 @@ export class SpecsPlayerComponent implements OnChanges {
 		this.onSaveDamage.emit(value);
 	}
 
-	cancel() {
-		this.onCancelClicked.emit();
+	setScale() {
+		const gradient = (this.activePlayer.currentHitPoints / this.activePlayer.originalItem.hitPoints) * 100;
+		if (gradient >= 75 && gradient <= 100) {
+			const styles = {
+				'background': 'linear-gradient(90deg, #6bd765 100%, #FF6860 100%)'
+			};
+			return styles;
+		} else if (gradient < 75 && gradient >= 50) {
+			const styles = {
+				'background': 'linear-gradient(90deg, #6bd765 65%, #FF6860 80%)'
+			};
+			return styles;
+		} else if (gradient < 50 && gradient >= 25) {
+			const styles = {
+				'background': 'linear-gradient(90deg, #6bd765 35%, #FF6860 50%)'
+			};
+			return styles;
+		} else if (gradient < 25 && gradient > 0) {
+			const styles = {
+				'background': 'linear-gradient(90deg, #6bd765 0%, #FF6860 15%)'
+			};
+			return styles;
+		} else if (gradient <= 0) {
+			const styles = {
+				'background': 'linear-gradient(90deg, #6bd765 0%, #FF6860 0%)'
+			};
+			return styles;
+		}
 	}
+
+
 }

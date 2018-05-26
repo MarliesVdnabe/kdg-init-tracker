@@ -8,6 +8,7 @@ import { CreatureTypeEnum } from '../../../../api/enums/creature-type';
 import { Encounter } from '../../../../api/models/encounter';
 import { Router } from '@angular/router/';
 import { Monster, EncounterMonster } from '../../../../api/models/monster';
+import { element } from 'protractor';
 
 @Component({
 	selector: 'app-overview',
@@ -26,6 +27,7 @@ export class OverviewComponent implements OnInit {
 	updatedItem: Hero | Monster | Encounter = null;
 	createItem: number;
 	lastListClicked: number;
+	clicked = 1;
 
 	// Enums
 	creaturetypeEnum = CreatureTypeEnum;
@@ -48,6 +50,8 @@ export class OverviewComponent implements OnInit {
 
 	addItemToInitiative(item) {
 		this.showEncounter = true;
+		this.editLoaded = false;
+		this.showCreateMonsterHeroOrEncounter = false;
 		if (item instanceof Hero) {
 			const newHero: EncounterHero = {
 				originalItem: item,
@@ -82,17 +86,20 @@ export class OverviewComponent implements OnInit {
 	}
 
 	cancel() {
+		this.showEncounter = true;
 		this.editLoaded = false;
 		this.showCreateMonsterHeroOrEncounter = false;
 	}
 
 	createNewItem(monsterOrHero) {
+		this.showEncounter = false;
 		this.showCreateMonsterHeroOrEncounter = true;
 		this.createItem = monsterOrHero;
 		this.item = null;
 	}
 
 	editItem(item) {
+		this.showEncounter = false;
 		this.editLoaded = true;
 		this.item = item;
 		this.createItem = null;
@@ -140,6 +147,7 @@ export class OverviewComponent implements OnInit {
 	}
 
 	showListItems(monsterHeroOrEncounter: number) {
+		this.clicked = monsterHeroOrEncounter;
 		this.lastListClicked = monsterHeroOrEncounter;
 		this._overviewService.getAllListItems(monsterHeroOrEncounter)
 			.subscribe((it: RequestResult<any | RequestError>) => {

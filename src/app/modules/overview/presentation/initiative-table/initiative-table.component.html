@@ -1,6 +1,7 @@
 <h2>Initiative order</h2>
 <table>
 	<tr>
+		<th></th>
 		<th>Combatant</th>
 		<th>
 			<img src="../../../../../assets/images/favorite-heart.png" alt="Hitpoints">
@@ -9,23 +10,23 @@
 			<img src="../../../../../assets/images/rpg-game.png" alt="Armor Class">
 		</th>
 		<th>Remove combatant</th>
-		<th>Visibility</th>
 	</tr>
 	<tr *ngFor="let item of encounterItems; let i = index">
+		<td *ngIf="item.originalItem.creatureType === 0">
+			<img src="../../../../../assets/images/japanese-dragon.png">
+		</td>
+		<td *ngIf="item.originalItem.creatureType === 1">
+			<img src="../../../../../assets/images/helmet.png">
+		</td>
 		<td>{{item?.originalItem.name | uppercase}}</td>
 		<td>{{item?.currentHitPoints}}/{{item?.originalItem.hitPoints}}</td>
 		<td>{{item?.originalItem.armorClass}}</td>
 		<td (click)="removeItem(i)">
 			<img class="editImage" src="../../../../../assets/images/cancel.png" alt="remove">
 		</td>
-		<td>
-			<label class="switch" *ngIf="item.originalItem && item.originalItem.creatureType === 0">
-				<input type="checkbox" checked>
-				<span class="slider round"></span>
-			</label>
-		</td>
 	</tr>
 </table>
 
 <button class="button" (click)="startEncounter()">Start Encounter</button>
 <button class="button" (click)="saveEncounter()">Save Encounter</button>
+<p *ngIf="invalidEncounter">Please make sure you have at least 1 monster and 1 hero in your encounter</p>

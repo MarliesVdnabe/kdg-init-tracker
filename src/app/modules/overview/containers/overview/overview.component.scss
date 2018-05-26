@@ -1,11 +1,41 @@
 .container {
 	display: flex;
 	height: 90vh;
-	#players, #specs {
+	.buttons-container {
+		display: flex;
+	}
+	.button {
+		font-weight: bold;
+		flex-grow: 1;
+		height: 3rem;
+		padding: 6px 12px;
+		margin: -1px;
+		background-color: #fff;
+		color: #414141;
+		border: 1px solid #CCDFCB;
+		border-radius: 0;
+	}
+	.button:first-child {
+		margin-left: 0;
+		border-right: 0;
+		flex-grow: 1;
+	}
+	.button:hover{
+		background-color: #CCDFCB;
+		color: #414141;
+	}
+	.active {
+		background-color: #CCDFCB;
+		color: #414141;
+	}
+	
+	#players {
 		margin-left: 1rem;
 		margin-right: 1rem;
 		flex-grow: 1;
 		width: 25%;
+		padding-right: 2rem;
+		border-right: 1px solid #ccc;
 	}
 	#encounter {
 		margin-left: 1rem;

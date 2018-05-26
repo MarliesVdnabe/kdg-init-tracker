@@ -1,6 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Dancing+Script');
+
 html {
 	color: #414141;
+}
+
+header {
+	display: flex;
+	justify-content: center;
+	font-family: 'Dancing Script', cursive;
+	width: 100%;
 }
 
 .button {
@@ -13,18 +22,18 @@ html {
     white-space: nowrap;
 	vertical-align: middle;
 	cursor: pointer;
-	border-radius: 4px;
+	border-radius: 2px;
 	border: 1px solid transparent;
 	background-color: #056571;
 	color: #fff;
 }
 
-button:hover {
+.button:hover {
 	background-color: #034e58;
 }
 
-button:disabled {
-	background-color: #707677
+.button:disabled {
+	background-color: #707677;
 }
 
 input {

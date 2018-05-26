@@ -1,17 +1,24 @@
-<dl>
-	<dt>Name:</dt>
-	<dd>{{activePlayer.originalItem.name}}</dd>
-	<dt>Hitpoints</dt>
-	<dd>{{activePlayer.originalItem.hitPoints}}</dd>
-	<dt>Armorclass:</dt>
-	<dd>{{activePlayer.originalItem.armorClass}}</dd>
-	<dt>Initiative:</dt>
-	<dd>{{activePlayer.originalItem.initModifier}}</dd>
-</dl>
-<form *ngIf="!disableInput && showDamage" [formGroup]="damageForm">
-	<label for="damage">Damage/heal:</label>
-	<input type="number" formControlName="Damage">
-	<button type="button" class="button" (click)="saveDamage('dam')">Damage</button>
-	<button type="button" class="button" (click)="saveDamage('heal')">Heal</button>
-	<button type="button" class="button" (click)="cancel()">Cancel</button>
-</form>
+<div class="container">
+	<h3>
+		<span>
+			<img *ngIf="activePlayer.originalItem.creatureType === 1" src="../../../../../assets/images/helmet.png" alt="hero">
+			<img *ngIf="activePlayer.originalItem.creatureType === 0" src="../../../../../assets/images/japanese-dragon.png" alt="monster">
+		</span>{{activePlayer.originalItem.name}}</h3>
+	<hr>
+	<dl>
+		<dt>Hitpoints:</dt>
+		<dd>{{activePlayer.originalItem.hitPoints}}</dd>
+		<dt>Armorclass:</dt>
+		<dd>{{activePlayer.originalItem.armorClass}}</dd>
+		<dt>Initiative:</dt>
+		<dd>{{activePlayer.originalItem.initModifier}}</dd>
+	</dl>
+	<div #scale class="scale" [ngStyle]="setScale()"></div>
+	<form *ngIf="!disableInput && showDamage" [formGroup]="damageForm">
+		<label for="damage">Damage/heal:</label>
+		<input type="number" formControlName="Damage">
+		<button type="button" class="button" (click)="saveDamage('dam')">Damage</button>
+		<button type="button" class="button" (click)="saveDamage('heal')">Heal</button>
+		<button type="button" class="button" (click)="cancel()">Cancel</button>
+	</form>
+</div>

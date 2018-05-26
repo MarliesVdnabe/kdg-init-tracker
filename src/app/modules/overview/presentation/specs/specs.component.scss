@@ -1,8 +1,12 @@
-@import '../../../../app.component.scss';
 label {
 	font-weight: bold;
 }
 
+input {
+	width: 70%;
+	display: block;
+}
+
 .invalid {
-	border: 1px solid $Watermelon;
+	border: 1px solid #ff6860;
 }

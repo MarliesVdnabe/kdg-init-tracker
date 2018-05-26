@@ -1,8 +1,11 @@
-<ul>
-	<li *ngFor="let item of encounterItems">
-		<span>{{item.originalItem.name}}</span>
-		<span>({{item.originalItem.initModifier}})</span>
-		<input type="number" [(ngModel)]="item.initiative">
-	</li>
-</ul>
-<button type="button" class="button" (click)="saveInit()">Go</button>
+<div>
+	<h2>Roll For initiative</h2>
+	<ul>
+		<li *ngFor="let item of encounterItems">
+			<span>{{item.originalItem.name}}</span>
+			<span>({{item.originalItem.initModifier}})</span>
+			<input type="number" [(ngModel)]="item.initiative">
+		</li>
+	</ul>
+	<button type="button" class="button" (click)="saveInit()">Go</button>
+</div>

@@ -10,6 +10,7 @@ import { EncounterHero, Hero } from '../../../../api/models/hero';
 })
 
 export class InitiativeTableComponent implements OnChanges {
+	invalidEncounter = false;
 	@Input() encounterItems;
 	@Input() updatedItem: Hero | Encounter | Monster;
 	@Output() onRemoveItem: EventEmitter<null> = new EventEmitter();
@@ -24,6 +25,7 @@ export class InitiativeTableComponent implements OnChanges {
 		if (!this.updatedItem) {
 			return;
 		}
+		// MAP UPDATED ITEM
 		const filter = this.encounterItems.filter(x => x.originalItem._id === this.updatedItem._id);
 		for (let i = 0; i < filter.length; i++) {
 			const index = this.encounterItems.indexOf(filter[i]);
@@ -56,7 +58,13 @@ export class InitiativeTableComponent implements OnChanges {
 	}
 
 	startEncounter() {
-		this.onStartEncounter.emit();
+		const monster = this.encounterItems.find(m => m.originalItem.creatureType === 0);
+		const hero = this.encounterItems.find(m => m.originalItem.creatureType === 1);
+		if (hero && monster) {
+			this.onStartEncounter.emit();
+		} else {
+			this.invalidEncounter = true;
+		}
 	}
 
 	saveEncounter() {
