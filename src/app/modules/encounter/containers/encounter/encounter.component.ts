@@ -64,8 +64,6 @@ export class EncounterComponent implements OnInit {
 			case 'next':
 				let prevIndex = this.playedIndex;
 				this.playedIndex = this.playedIndex + 1;
-				console.log(this.playedIndex);
-				console.log(tempEncounterItems.length);
 				if (this.playedIndex === tempEncounterItems.length) {
 					this.playedIndex = 0;
 					prevIndex = tempEncounterItems.length - 1;
