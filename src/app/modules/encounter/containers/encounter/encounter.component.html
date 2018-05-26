@@ -5,7 +5,8 @@
 		<app-specs-player [activePlayer]="activePlayer" [disableInput]="true"></app-specs-player>
 	</div>
 	<div id="encounter">
-		<app-encounter-board [encounterItems]="encounterItems" [encounterStarted]="showActivePlayer" (onItemClicked)="showDetailsItem($event)"></app-encounter-board>
+		<app-encounter-board [encounterItems]="encounterItems" [encounterStarted]="showActivePlayer" (onItemClicked)="showDetailsItem($event)"
+		 (onRemoveItem)="removeItemFromEncounter($event)"></app-encounter-board>
 	</div>
 	<div id="activePlayer" *ngIf="showDetailsPlayer">
 		<app-specs-player [activePlayer]="detailsItem" [disableInput]="false" [showDamage]="showActivePlayer" (onSaveDamage)="saveDamageOrHeal($event)"

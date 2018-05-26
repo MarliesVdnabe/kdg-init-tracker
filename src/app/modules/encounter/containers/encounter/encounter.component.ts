@@ -43,41 +43,56 @@ export class EncounterComponent implements OnInit {
 		if (init.length === this.encounterItems.length) {
 			this.rollInitiative();
 		}
-		console.log(this.encounterItems);
 	}
 
 	actionClicked(action) {
-		if (action === 'start') {
-			const item = this.encounterItems.find(x => x.played === true);
-			this.playedIndex = this.encounterItems.indexOf(item);
-			this.encounterItems[this.playedIndex].played = true;
-			this.showActivePlayer = true;
-			this.activePlayer = this.encounterItems[this.playedIndex];
-		} else if (action === 'next') {
-			this.playedIndex = this.playedIndex + 1;
-			let prevIndex = this.playedIndex - 1;
-			if (this.playedIndex === this.encounterItems.length) {
-				this.playedIndex = 0;
-				prevIndex = this.encounterItems.length - 1;
-			}
-			this.encounterItems[this.playedIndex].played = true;
-			this.encounterItems[prevIndex].played = false;
-			this.activePlayer = this.encounterItems[this.playedIndex];
-			this.updateEncounter();
-		} else if (action === 'prev') {
-			this.playedIndex = this.playedIndex - 1;
-			const prevIndex = this.playedIndex + 1;
-			if (this.playedIndex < 0) {
-				this.playedIndex = this.encounterItems.length - 1;
-			}
-			this.encounterItems[this.playedIndex].played = true;
-			this.encounterItems[prevIndex].played = false;
-			this.activePlayer = this.encounterItems[this.playedIndex];
-			this.updateEncounter();
-		} else if (action === 'stop') {
-			this.showActivePlayer = false;
-			this.activePlayer = null;
-			this.showDetailsPlayer = false;
+		// Create temp list to skip the disabled monsters
+		const tempEncounterItems = this.encounterItems.filter(i => i.originalItem.creatureType === 1
+			|| i.originalItem.creatureType === 0 && i.visible);
+		switch (action) {
+			case 'start':
+				const item = tempEncounterItems.find(x => x.played === true);
+				if (item) {
+					this.playedIndex = tempEncounterItems.indexOf(item);
+				} else {
+					this.playedIndex = 0;
+				}
+				tempEncounterItems[this.playedIndex].played = true;
+				this.showActivePlayer = true;
+				this.activePlayer = tempEncounterItems[this.playedIndex];
+				break;
+			case 'next':
+				let prevIndex = this.playedIndex;
+				this.playedIndex = this.playedIndex + 1;
+				console.log(this.playedIndex);
+				console.log(tempEncounterItems.length);
+				if (this.playedIndex === tempEncounterItems.length) {
+					this.playedIndex = 0;
+					prevIndex = tempEncounterItems.length - 1;
+				}
+				tempEncounterItems[this.playedIndex].played = true;
+				tempEncounterItems[prevIndex].played = false;
+				this.activePlayer = tempEncounterItems[this.playedIndex];
+				this.updateEncounter();
+				break;
+			case 'prev':
+				this.playedIndex = this.playedIndex - 1;
+				const prevIndx = this.playedIndex + 1;
+				if (this.playedIndex < 0) {
+					this.playedIndex = tempEncounterItems.length - 1;
+				}
+				tempEncounterItems[this.playedIndex].played = true;
+				tempEncounterItems[prevIndx].played = false;
+				this.activePlayer = tempEncounterItems[this.playedIndex];
+				this.updateEncounter();
+				break;
+			case 'stop':
+				this.showActivePlayer = false;
+				this.activePlayer = null;
+				this.showDetailsPlayer = false;
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -94,6 +109,15 @@ export class EncounterComponent implements OnInit {
 		for (let j = 0; j < monsters.length; j++) {
 			this.encounterItems.push(monsters[j]);
 		}
+	}
+
+	removeItemFromEncounter(index) {
+		this.encounterItems.splice(index, 1);
+		const heroes: EncounterHero[] = this.encounterItems.filter(x => x.originalItem.creatureType === 1);
+		const monsters: EncounterMonster[] = this.encounterItems.filter(x => x.originalItem.creatureType === 0);
+		this.encounter.monsters = monsters;
+		this.encounter.heroes = heroes;
+		this.updateEncounter();
 	}
 
 	rollInitiative() {
@@ -116,6 +140,11 @@ export class EncounterComponent implements OnInit {
 		this.updateEncounter();
 	}
 
+	showDetailsItem(item) {
+		this.showDetailsPlayer = true;
+		this.detailsItem = item;
+	}
+
 	updateEncounter() {
 		this._encounterService.updateEncounter(this.encounter)
 			.subscribe((updatedEncounter: RequestResult<any | RequestError>) => {
@@ -128,10 +157,5 @@ export class EncounterComponent implements OnInit {
 					console.log(updatedEncounter.data as RequestError);
 				}
 			});
-	}
-
-	showDetailsItem(item) {
-		this.showDetailsPlayer = true;
-		this.detailsItem = item;
 	}
 }

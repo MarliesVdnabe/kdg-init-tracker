@@ -10,6 +10,7 @@ import { RollInitiativeComponent } from './presentation/roll-initiative/roll-ini
 import { EncounterService } from './services/encounter.service';
 import { NavigationButtonsComponent } from './presentation/navigation-buttons/navigation-buttons.component';
 import { SpecsPlayerComponent } from './presentation/specs-player/specs-player.component';
+import { PopupComponent } from './presentation/popup/popup.component';
 
 export const myEncounterRoutes = [
 	{ path: '', component: EncounterComponent, resolve: { encounter: EncounterResolver } }
@@ -21,7 +22,8 @@ export const myEncounterRoutes = [
 		EncounterBoardComponent,
 		RollInitiativeComponent,
 		NavigationButtonsComponent,
-		SpecsPlayerComponent
+		SpecsPlayerComponent,
+		PopupComponent
 	],
 	imports: [
 		ReactiveFormsModule,
@@ -34,7 +36,8 @@ export const myEncounterRoutes = [
 		EncounterBoardComponent,
 		RollInitiativeComponent,
 		NavigationButtonsComponent,
-		SpecsPlayerComponent
+		SpecsPlayerComponent,
+		PopupComponent
 	],
 	providers: [
 		EncounterService,

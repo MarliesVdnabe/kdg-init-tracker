@@ -14,21 +14,24 @@
 		<th>Remove combatant</th>
 		<th>Visibility</th>
 	</tr>
-	<tr *ngFor="let item of encounterItems; let i = index;" [ngClass]="{'active': item.played && encounterStarted}" (click)="showItemDetails(encounterItems[i])">
+	<tr *ngFor="let item of encounterItems; let i = index;" [ngClass]="{'active': item.played && encounterStarted, 'selected': item.selected}"
+	 (click)="showItemDetails($event, encounterItems[i])">
 		<td>{{item.initiative}}</td>
 		<td>{{item.originalItem.name | uppercase}}</td>
 		<td>{{item.currentHitPoints}}/{{item.originalItem.hitPoints}}</td>
 		<td>{{item.originalItem.armorClass}}</td>
 		<td *ngIf="item.originalItem.creatureType === 1">{{item.originalItem.player}}</td>
 		<td *ngIf="item.originalItem.creatureType === 0"></td>
-		<td (click)="removeCombatant()">
+		<td class="hasEvent" (click)="removeCombatant(i)">
 			<img class="editImage" src="../../../../../assets/images/cancel.png" alt="remove">
 		</td>
-		<td>
+		<td class="hasEvent">
 			<label class="switch" *ngIf="item.originalItem.creatureType === 0">
-				<input type="checkbox" checked>
+				<input class="hasEvent" type="checkbox" [(ngModel)]="item.visible">
 				<span class="slider round"></span>
 			</label>
 		</td>
 	</tr>
 </table>
+
+<app-popup *ngIf="showPopup" (onDelete)="confirmDelete($event)"></app-popup>

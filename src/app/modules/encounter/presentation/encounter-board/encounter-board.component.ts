@@ -9,9 +9,14 @@ import { EncounterMonster } from '../../../../api/models/monster';
 })
 
 export class EncounterBoardComponent implements OnChanges {
+	selected = false;
+	showPopup = false;
+	removeItemIndex: number;
 	@Input() encounterStarted: boolean;
 	@Input() encounterItems;
 	@Output() onItemClicked: EventEmitter<any> = new EventEmitter();
+	@Output() onRemoveItem: EventEmitter<number> = new EventEmitter();
+
 
 	constructor() { }
 
@@ -31,7 +36,28 @@ export class EncounterBoardComponent implements OnChanges {
 		};
 	}
 
-	showItemDetails(encounterItem) {
+	showItemDetails(event, encounterItem) {
+		const r = event.target;
+		if (r.className === 'hasEvent' || r.localName === 'img' || r.localName === 'label' || r.localName === 'span' || r.localName === 'input') {
+			return;
+		}
+		this.encounterItems.forEach(e => {
+			e.selected = false;
+		});
+		encounterItem.selected = true;
 		this.onItemClicked.emit(encounterItem);
+	}
+
+
+	removeCombatant(index) {
+		this.removeItemIndex = index;
+		this.showPopup = true;
+	}
+
+	confirmDelete(yOrN) {
+		this.showPopup = false;
+		if (yOrN === 'y') {
+			this.onRemoveItem.emit(this.removeItemIndex);
+		}
 	}
 }
