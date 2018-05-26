@@ -12,13 +12,14 @@
 		<dd>{{activePlayer.originalItem.armorClass}}</dd>
 		<dt>Initiative:</dt>
 		<dd>{{activePlayer.originalItem.initModifier}}</dd>
+		<dt>Current hitpoints:</dt>
 	</dl>
 	<div #scale class="scale" [ngStyle]="setScale()"></div>
-	<form *ngIf="!disableInput && showDamage" [formGroup]="damageForm">
+	<form *ngIf="!disableInput && showDamage && activePlayer.currentHitPoints > 0" [formGroup]="damageForm">
 		<label for="damage">Damage/heal:</label>
 		<input type="number" formControlName="Damage">
 		<button type="button" class="button" (click)="saveDamage('dam')">Damage</button>
 		<button type="button" class="button" (click)="saveDamage('heal')">Heal</button>
-		<button type="button" class="button" (click)="cancel()">Cancel</button>
 	</form>
+	<button id="cancel" type="button" class="button" (click)="cancel()">Cancel</button>
 </div>
