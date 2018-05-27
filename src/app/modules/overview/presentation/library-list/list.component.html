@@ -9,4 +9,4 @@
 		</span>
 	</li>
 </ul>
-<button *ngIf="lastListClicked===0 || lastListClicked===1" class="button" (click)="addNewItem(lastListClicked)">Add new {{creatureTypeEnum[lastListClicked]}}</button>
+<button *ngIf="lastListClicked===0 || lastListClicked===1" class="button createNew" (click)="addNewItem(lastListClicked)">Add new {{creatureTypeEnum[lastListClicked]}}</button>

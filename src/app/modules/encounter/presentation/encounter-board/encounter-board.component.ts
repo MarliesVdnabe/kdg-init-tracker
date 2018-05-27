@@ -21,6 +21,7 @@ export class EncounterBoardComponent implements OnChanges {
 	constructor() { }
 
 	ngOnChanges(changes: SimpleChanges) {
+		console.log(this.encounterItems);
 		this.encounterItems.sort(this.sortAsc());
 	}
 
@@ -55,7 +56,13 @@ export class EncounterBoardComponent implements OnChanges {
 			} else if (a.initiative > b.initiative) {
 				return -1;
 			} else {
-				return 0;
+				if (a.originalItem.initModifier < b.originalItem.initModifier) {
+					return 1;
+				} else if (a.originalItem.initModifier > b.originalItem.initModifier) {
+					return -1;
+				} else {
+					return 0;
+				}
 			}
 		};
 	}

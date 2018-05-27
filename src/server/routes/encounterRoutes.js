@@ -16,7 +16,7 @@ router.post('/encounter/create', encounter_controller.encounters_create_post);
 router.get('/encounter/:_id', encounter_controller.encounters_detail);
 
 // DELETE request to delete an encounter
-router.delete('/encounter/:_id/delete', encounter_controller.encounters_delete_delete);
+router.post('/encounter/:_id/delete', encounter_controller.encounters_delete_delete);
 
 // POST request to update an encounter
 router.post('/encounter/:_id/update', encounter_controller.encounters_update_put);

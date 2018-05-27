@@ -15,6 +15,10 @@ export class EncounterDomainService {
 		return this._encounterApiService.createNewEncounter(encounter);
 	}
 
+	deleteEncounter(id: string): Observable<any | RequestError> {
+		return this._encounterApiService.deleteEncounter(id);
+	}
+
 	getAllEncounters(): Observable<any | RequestError> {
 		return this._encounterApiService.getAllEncounters();
 	}

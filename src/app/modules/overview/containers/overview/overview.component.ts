@@ -49,6 +49,14 @@ export class OverviewComponent implements OnInit {
 	}
 
 	addItemToInitiative(item) {
+		if (this.encounter._id) {
+			const monsters = this.encounter.monsters;
+			const heroes = this.encounter.heroes;
+			this.encounter = new Encounter({
+				monsters: monsters,
+				heroes: heroes
+			});
+		}
 		this.showEncounter = true;
 		this.editLoaded = false;
 		this.showCreateMonsterHeroOrEncounter = false;
@@ -58,7 +66,7 @@ export class OverviewComponent implements OnInit {
 				currentHitPoints: item.hitPoints,
 				currentArmorClass: item.armorClass,
 				played: false,
-				initiative: 0
+				initiative: -2
 			};
 			this.encounterItems.push(newHero);
 			this.encounter.heroes.push(newHero);
@@ -68,7 +76,7 @@ export class OverviewComponent implements OnInit {
 				currentHitPoints: item.hitPoints,
 				currentArmorClass: item.armorClass,
 				played: false,
-				initiative: 0,
+				initiative: -2,
 				visible: true
 			};
 			this.encounterItems.push(newMonster);
@@ -86,6 +94,7 @@ export class OverviewComponent implements OnInit {
 	}
 
 	cancel() {
+		this.item = null;
 		this.showEncounter = true;
 		this.editLoaded = false;
 		this.showCreateMonsterHeroOrEncounter = false;
@@ -106,6 +115,7 @@ export class OverviewComponent implements OnInit {
 	}
 
 	giveNewEncounterName() {
+		this.showEncounter = false;
 		this.showCreateMonsterHeroOrEncounter = true;
 		this.createItem = 2;
 	}
@@ -115,6 +125,15 @@ export class OverviewComponent implements OnInit {
 		const monsters = this.encounterItems.filter(y => y.originalItem instanceof Monster) as EncounterMonster[];
 		this.encounter.heroes = heroes;
 		this.encounter.monsters = monsters;
+	}
+
+	deleteEncounter(encounter: Encounter) {
+		this._overviewService.deleteEncounter(encounter._id)
+			.subscribe((result: RequestResult<any | RequestError>) => {
+				if (result.requestResultType !== RequestResultType.Data) {
+					console.log(result.data as RequestError);
+				}
+			});
 	}
 
 	saveOrCreateItem(item) {

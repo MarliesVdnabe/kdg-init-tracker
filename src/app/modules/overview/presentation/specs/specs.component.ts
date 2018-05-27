@@ -17,6 +17,7 @@ export class SpecsComponent implements OnChanges {
 	@Input() item: Hero | Monster | Encounter;
 	@Input() createItem: number;
 	@Output() onSaveItem: EventEmitter<Hero | Monster | Encounter> = new EventEmitter();
+	@Output() onDeleteEncounter: EventEmitter<Encounter> = new EventEmitter();
 	@Output() onCancelClicked: EventEmitter<null> = new EventEmitter();
 
 	heroForm: FormGroup;
@@ -49,6 +50,7 @@ export class SpecsComponent implements OnChanges {
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
+		console.log(this.item);
 		if (this.item instanceof Hero || this.createItem === this.creatureTypeEnum.Hero) {
 			this.formType = 1;
 		} else if (this.item instanceof Monster || this.createItem === this.creatureTypeEnum.Monster) {
@@ -61,6 +63,10 @@ export class SpecsComponent implements OnChanges {
 
 	cancel() {
 		this.onCancelClicked.emit();
+	}
+
+	deleteEncounter() {
+		this.onDeleteEncounter.emit(this.item as Encounter);
 	}
 
 	getFormData() {

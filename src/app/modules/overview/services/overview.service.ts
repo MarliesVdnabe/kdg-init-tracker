@@ -112,4 +112,8 @@ export class OverviewService {
 	updateEncounter(encounter: Encounter): Observable<any | RequestError> {
 		return this._encounterService.updateEncounter(encounter);
 	}
+
+	deleteEncounter(id: string): Observable<any | RequestError> {
+		return this._encounterService.deleteEncounter(id);
+	}
 }

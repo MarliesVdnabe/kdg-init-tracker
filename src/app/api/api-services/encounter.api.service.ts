@@ -32,6 +32,17 @@ export class EncounterApiService extends BaseRestApiService {
 			});
 	}
 
+	deleteEncounter(id: string): Observable<any | RequestError> {
+		return this.post(`${this.backendUrl}/encounter/${id}/delete`)
+			.map((result: RequestResult<any | RequestError>) => {
+				if (result.requestResultType === RequestResultType.Data) {
+					return new RequestResult(result.requestResultType, result.data);
+				} else {
+					return result.data as RequestResult<RequestError>;
+				}
+			});
+	}
+
 	getAllEncounters(): Observable<any | RequestError> {
 		return this.get(`${this.backendUrl}/encounters`)
 			.map((result: RequestResult<any | RequestError>) => {

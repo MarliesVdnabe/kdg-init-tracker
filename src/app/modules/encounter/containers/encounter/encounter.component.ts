@@ -40,9 +40,10 @@ export class EncounterComponent implements OnInit {
 
 	ngOnInit() {
 		this.encounter = this.snapshot.data.encounter.data;
+		console.log(this.encounter);
 		this.encounterToListItems();
-		const init = this.encounterItems.filter(x => (x.initiative === 0));
-		if (init.length === this.encounterItems.length) {
+		const init = this.encounterItems.filter(x => (x.initiative === -2));
+		if (init.length) {
 			this.rollInitiative();
 		}
 	}
@@ -180,7 +181,6 @@ export class EncounterComponent implements OnInit {
 	showDetailsItem(item) {
 		this.showDetailsPlayer = true;
 		setTimeout(() => {
-			console.log('start timer');
 			this.showDetailsPlayer = false;
 		}, 30000);
 		this.detailsItem = item;

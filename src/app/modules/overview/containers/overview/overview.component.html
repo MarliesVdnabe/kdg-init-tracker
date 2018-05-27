@@ -15,6 +15,6 @@
 		<app-initiative-table *ngIf="showEncounter" [encounterItems]='encounterItems' [updatedItem]="updatedItem" (onRemoveItem)="removeItem($event)"
 		 (onStartEncounter)="startEncounter()" (onSaveEncounter)="giveNewEncounterName()"></app-initiative-table>
 		<app-specs *ngIf="editLoaded || showCreateMonsterHeroOrEncounter" [item]="item" [createItem]="createItem" (onSaveItem)="saveOrCreateItem($event)"
-		 (onCancelClicked)="cancel()"></app-specs>
+		 (onCancelClicked)="cancel()" (onDeleteEncounter)="deleteEncounter($event)"></app-specs>
 	</div>
 </div>

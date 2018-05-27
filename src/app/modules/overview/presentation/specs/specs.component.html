@@ -37,6 +37,7 @@
 <form *ngIf="formType===2" [formGroup]="encounterForm" (ngSubmit)="saveItem()">
 	<label for="name">Name:</label>
 	<input type="text" id="name" formControlName="Name" autocomplete="off" [ngClass]="{'invalid': !encounterForm.controls['Name'].valid && encounterForm.controls['Name'].touched }">
-	<button class="button" type="submit" [disabled]="encounterForm && !encounterForm.valid">Save</button>
+	<button class="button" type="submit" [disabled]="encounterForm && !encounterForm.valid">Save encounter</button>
+	<button *ngIf="item && item._id" class="button" type="button" (click)="deleteEncounter()">Delete encounter</button>
 	<button type="button" class="button" (click)="cancel()">Cancel</button>
 </form>
