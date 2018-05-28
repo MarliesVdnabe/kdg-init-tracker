@@ -44,24 +44,44 @@ export class SpecsPlayerComponent implements OnChanges {
 
 	setScale() {
 		const gradient = (this.activePlayer.currentHitPoints / this.activePlayer.originalItem.hitPoints) * 100;
-		if (gradient >= 75 && gradient <= 100) {
+		if (gradient === 100) {
 			const styles = {
 				'background': 'linear-gradient(90deg, #6bd765 100%, #FF6860 100%)'
 			};
 			return styles;
-		} else if (gradient < 75 && gradient >= 50) {
+		} else if (gradient > 75 && gradient <= 100) {
+			const styles = {
+				'background': 'linear-gradient(90deg, #6bd765 85%, #FF6860 95%)'
+			};
+			return styles;
+		} else if (gradient === 75) {
 			const styles = {
 				'background': 'linear-gradient(90deg, #6bd765 65%, #FF6860 80%)'
 			};
 			return styles;
-		} else if (gradient < 50 && gradient >= 25) {
+		} else if (gradient < 75 && gradient > 50) {
 			const styles = {
-				'background': 'linear-gradient(90deg, #6bd765 35%, #FF6860 50%)'
+				'background': 'linear-gradient(90deg, #6bd765 55%, #FF6860 75%)'
+			};
+			return styles;
+		} else if (gradient === 50) {
+			const styles = {
+				'background': 'linear-gradient(90deg, #6bd765 40%, #FF6860 60%)'
+			};
+			return styles;
+		} else if (gradient < 50 && gradient > 25) {
+			const styles = {
+				'background': 'linear-gradient(90deg, #6bd765 25%, #FF6860 45%)'
+			};
+			return styles;
+		} else if (gradient === 25) {
+			const styles = {
+				'background': 'linear-gradient(90deg, #6bd765 15%, #FF6860 25%)'
 			};
 			return styles;
 		} else if (gradient < 25 && gradient > 0) {
 			const styles = {
-				'background': 'linear-gradient(90deg, #6bd765 0%, #FF6860 15%)'
+				'background': 'linear-gradient(90deg, #6bd765 0%, #FF6860 10%)'
 			};
 			return styles;
 		} else if (gradient <= 0) {

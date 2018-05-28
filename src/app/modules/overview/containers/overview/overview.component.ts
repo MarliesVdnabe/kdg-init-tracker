@@ -143,6 +143,7 @@ export class OverviewComponent implements OnInit {
 					if (updatdItem.requestResultType === RequestResultType.Data) {
 						this.updatedItem = updatdItem.data as Hero | Encounter | Monster;
 						this.editLoaded = false;
+						this.showEncounter = true;
 					} else {
 						console.log(updatdItem.data as RequestError);
 					}
